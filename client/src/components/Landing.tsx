@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
+
 /**
  * Landing page component.
  * Top section of the page with a welcome message.
@@ -8,7 +9,7 @@ import PrimaryButton from "@/components/buttons/PrimaryButton";
  */
 
 const Landing: React.FC = () => (
-  <div className="flex flex-col items-center justify-start min-h-screen bg-violet-100 px-32">
+  <div className="flex flex-col items-center justify-start bg-violet-100 px-32">
     <div className="w-full pb-7">
       <Navbar isLoggedin={false} />
     </div>
@@ -41,6 +42,7 @@ const Landing: React.FC = () => (
         />
       </div>
     </div>
+   
   </div>
 );
 
