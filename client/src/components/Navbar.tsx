@@ -1,6 +1,6 @@
 import { UserCircleIcon, PlusCircleIcon } from "@heroicons/react/20/solid";
-import PrimaryButton from "@/components/PrimaryButton";
-import SecondaryButton from "@/components/SecondaryButton";
+import PrimaryButton from "@/components/buttons/PrimaryButton";
+import SecondaryButton from "@/components/buttons/SecondaryButton";
 import Avatar from "@/components/Avatar";
 /**
  * Main nav component with links to other pages

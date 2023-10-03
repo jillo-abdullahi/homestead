@@ -17,7 +17,7 @@ interface AvatarProps {
   username: string;
 }
 const Avatar: React.FC<AvatarProps> = ({ userEmail, username }) => {
-  function classNames(...classes) {
+  function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(" ");
   }
   return (
