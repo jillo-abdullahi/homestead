@@ -1,9 +1,10 @@
+import { UserCircleIcon, PlusCircleIcon } from "@heroicons/react/20/solid";
 import PrimaryButton from "@/components/PrimaryButton";
+import SecondaryButton from "@/components/SecondaryButton";
 import Avatar from "@/components/Avatar";
 /**
  * Main nav component with links to other pages
  * @prop {boolean} isLoggedin - whether user is logged in or not
- *
  * @returns
  */
 
@@ -24,20 +25,32 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedin = false }) => (
       </span>
     </a>
     {/* links */}
-    <div className="ml-auto ">
+    <div className="ml-auto flex space-x-3 items-center">
       {isLoggedin && (
-        <Avatar userEmail="jayloabdullahi@gmail.com" username="shrewdTurtle" />
+        <div className="flex space-x-2 items-center">
+          <SecondaryButton padding="px-3 py-2" fontSize="text-base">
+            <div className="flex items-center justify-start">
+              <PlusCircleIcon className="h-5 w-5 mr-1" aria-hidden="true" />
+              <span>Add Listing</span>
+            </div>
+          </SecondaryButton>
+          <Avatar
+            userEmail="jayloabdullahi@gmail.com"
+            username="shrewdTurtle"
+          />
+        </div>
       )}
       {!isLoggedin && (
         <div className="flex items-center space-x-6">
-          <a href="#" className="text-gray-700 hover:text-gray-900 font-medium">
-            Login
-          </a>
-          <PrimaryButton
-            text="Sign up"
-            padding="px-3 py-2"
-            fontSize="text-base"
-          />
+          <button className="flex items-center justify-start font-medium text-gray-700 hover:text-violet-700">
+            <span>Login</span>
+          </button>
+          <PrimaryButton padding="px-3 py-2" fontSize="text-base">
+            <div className="flex items-center justify-start">
+              <UserCircleIcon className="h-5 w-5 mr-1" aria-hidden="true" />
+              <span>Sign up</span>
+            </div>
+          </PrimaryButton>
         </div>
       )}
     </div>
