@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
+import PrimaryButton from "@/components/PrimaryButton";
 /**
  * Landing page component.
  * Top section of the page with a welcome message.
@@ -9,7 +10,7 @@ import Navbar from "@/components/Navbar";
 const Landing: React.FC = () => (
   <div className="flex flex-col items-center justify-start min-h-screen">
     <div className="w-full pb-7">
-      <Navbar />
+      <Navbar isLoggedin={true}/>
     </div>
 
     <div className="w-full grid grid-cols-12 gap-x-6 h-[36rem]">
@@ -21,9 +22,17 @@ const Landing: React.FC = () => (
         <div className="text-lg text-gray-500">
           Connecting you with homes that match your lifestyle.
         </div>
+        <div className="mt-5">
+          <PrimaryButton text="Get Started" padding="px-4 py-3" fontSize="text-lg" />
+        </div>
       </div>
       <div className="col-span-6">
-        <Image src="/landing-image.svg" alt="landing image" width={800} height={800} />
+        <Image
+          src="/landing-image.svg"
+          alt="landing image"
+          width={800}
+          height={800}
+        />
       </div>
     </div>
   </div>
