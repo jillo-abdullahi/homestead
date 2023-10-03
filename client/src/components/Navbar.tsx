@@ -1,4 +1,5 @@
 import { UserCircleIcon, PlusCircleIcon } from "@heroicons/react/20/solid";
+import Link from "next/link";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import Avatar from "@/components/Avatar";
@@ -15,7 +16,7 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ isLoggedin = false }) => (
   <div className="w-full py-6 flex items-center justify-between">
     {/* brand name  */}
-    <a
+    <Link
       href="/"
       className="text-xl text-gray-700 flex items-end justify-start space-x-1"
     >
@@ -23,7 +24,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedin = false }) => (
         Homestead
         <span className="text-violet-500 font-bold text-3xl">.</span>
       </span>
-    </a>
+    </Link>
     {/* links */}
     <div className="ml-auto flex space-x-3 items-center">
       {isLoggedin && (
