@@ -87,29 +87,29 @@ builder.queryType({
 });
 
 // create listing mutation
-builder.mutationType({
-  fields: (t) => ({
-    createListing: t.prismaField({
-      type: "Listing",
-      args: {
-        title: t.arg.string(),
-        description: t.arg.string(),
-        price: t.arg.float(),
-        location: t.arg.string(),
-        bedrooms: t.arg.int(),
-        bathrooms: t.arg.int(),
-        area: t.arg.int(),
-        images: t.arg.stringList(),
-      },
-      resolve: async (query, root, args, ctx, info) => {
-        return await prisma.listing.create({
-          ...query,
-          data: args,
-        });
-      },
-    }),
-  }),
-});
+// builder.mutationType({
+//   fields: (t) => ({
+//     createListing: t.prismaField({
+//       type: "Listing",
+//       args: {
+//         title: t.arg.string(),
+//         description: t.arg.string(),
+//         price: t.arg.float(),
+//         location: t.arg.string(),
+//         bedrooms: t.arg.int(),
+//         bathrooms: t.arg.int(),
+//         area: t.arg.int(),
+//         images: t.arg.stringList(),
+//       },
+//       resolve: async (query, root, args, ctx, info) => {
+//         return await prisma.listing.create({
+//           ...query,
+//           data: args,
+//         });
+//       },
+//     }),
+//   }),
+// });
 
 export const schema = builder.toSchema();
 
