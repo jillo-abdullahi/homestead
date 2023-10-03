@@ -23,7 +23,11 @@ const Landing: React.FC = () => (
           Connecting you with homes that match your lifestyle.
         </div>
         <div className="mt-5">
-          <PrimaryButton padding="px-4 py-3" fontSize="text-lg">
+          <PrimaryButton
+            padding="px-4 py-3"
+            fontSize="text-lg"
+            onClick={() => console.log("Getting started")}
+          >
             <span>Get Started</span>
           </PrimaryButton>
         </div>
