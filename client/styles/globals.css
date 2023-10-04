@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .container {
+    @apply px-4 md:px-16 lg:px-32 w-full min-h-screen mx-auto;
+  }
+}
+
 html,
 body {
   padding: 0;
@@ -25,4 +31,23 @@ a {
     color: black;
     background: white;
   }
+}
+
+/* overriding some styles for the image carousel */
+
+.image-gallery-slide-wrapper {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.image-gallery-thumbnail {
+  border-radius: 8px;
+  overflow: hidden;
+  height: 50px;
+  
+}
+
+.image-gallery-thumbnail.active,
+.image-gallery-thumbnail:hover {
+  border: 2px solid #743bde !important;
 }

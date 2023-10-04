@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import HomePage from "@/containers/HomePage";
 import PropertyListing from "@/components/PropertyListing";
+import { listings } from "@/utils/dummyListings";
 
 const Home: NextPage = () => {
   return (
@@ -15,26 +16,21 @@ const Home: NextPage = () => {
       <main className="bg-white">
         <HomePage />
         <div className="flex flex-col items-center mt-6 space-y-4">
-          <PropertyListing
-            title="3 Bedroom Apartment"
-            location="Lekki, Lagos"
-            price={250000}
-            image="/landing-image.svg"
-            id="12345"
-            bedrooms={3}
-            bathrooms={2}
-            area={2000}
-          />
-           <PropertyListing
-            title="3 Bedroom Apartment"
-            location="Lekki, Lagos"
-            price={250000}
-            image="/landing-image.svg"
-            id="12345"
-            bedrooms={3}
-            bathrooms={2}
-            area={2000}
-          />
+          {listings.map(
+            ({ id, location, images, bathrooms, bedrooms, area, title , price}) => (
+              <PropertyListing
+                key={id}
+                title={title}
+                location={location}
+                price={price}
+                image={images[0].original}
+                id={id}
+                bedrooms={bedrooms}
+                bathrooms={bathrooms}
+                area={area}
+              />
+            )
+          )}
         </div>
       </main>
     </div>

@@ -1,6 +1,9 @@
 import Image from "next/image";
 import { BuildingOffice2Icon, MapPinIcon } from "@heroicons/react/24/outline";
-import SecondaryButton from "./buttons/SecondaryButton";
+import SecondaryButton from "@/components/buttons/SecondaryButton";
+import ListingPrice from "@/components/listingDetails/ListingPrice";
+import ListingSpecs from "@/components/listingDetails/ListingSpecs";
+import ListingTitle from "@/components/listingDetails/ListingTitle";
 
 /**
  * component that displays a single property listing
@@ -38,57 +41,31 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
 }) => {
   return (
     <div className="w-full rounded-lg p-5 grid grid-cols-12 gap-x-2 shadow-md max-w-3xl border">
-      <div
-        className="bg-violet-100 col-span-4 w-48 h-48 rounded-md"
-        style={{
-          backgroundImage: `url(${image}) no-repeat center center`,
-          backgroundSize: "cover",
-          backgroundColor: "#F3F4F6",
-        }}
-      ></div>
+      {!image && (
+        <div className="col-span-4 w-[200px] h-[200px] rounded-md bg-gray-300"></div>
+      )}
+      {image && (
+        <img
+          src={image}
+          alt="property image"
+          width={200}
+          className="col-span-4 rounded-md my-auto"
+        />
+      )}
       <div className="col-span-5 flex flex-col space-y-6 justify-center">
-        <div className="space-y-2">
-          <div className="text-gray-700 text-xl font-medium">{title}</div>
-          <div className="text-gray-500 text-sm flex items-center justify-start">
-            <MapPinIcon className="w-5 h-5" aria-hidden="true" />
-            {location}
-          </div>
-        </div>
+        {/* title and location  */}
+        <ListingTitle title={title} location={location ?? ""} />
 
         <div className="space-y-3">
-          <div className="flex items-center justify-start space-x-4">
-            <div className="text-gray-700 text-sm flex items-center justify-start space-x-2">
-              <Image
-                src={"/listingIcons/bedroom.svg"}
-                alt="bed"
-                width={20}
-                height={20}
-              />
-              <div>{bedrooms} beds</div>
-            </div>
-            <div className="text-gray-700 text-sm flex items-center justify-start space-x-2">
-              <Image
-                src={"/listingIcons/bathroom.svg"}
-                alt="bath"
-                width={20}
-                height={20}
-              />
-              <div>{bathrooms} baths</div>
-            </div>
-            <div className="text-gray-700 text-sm flex items-center justify-start space-x-2">
-              <Image
-                src={"/listingIcons/area.svg"}
-                alt="area"
-                width={20}
-                height={20}
-              />
-              <div>{area?.toLocaleString()} sqft</div>
-            </div>
-          </div>
-          <div className="">
-            <div className="text-gray-500 text-sm">Price:</div>
-            <div className="text-2xl font-bold">${price?.toLocaleString()}</div>
-          </div>
+          {/* listing specs  */}
+          <ListingSpecs
+            bedrooms={bedrooms ?? 0}
+            bathrooms={bathrooms ?? 0}
+            area={area ?? 0}
+          />
+
+          {/* price  */}
+          {<ListingPrice price={price ?? 0} />}
         </div>
       </div>
       <div className="col-span-3 h-full flex items-center justify-center">
