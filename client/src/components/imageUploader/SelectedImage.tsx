@@ -1,3 +1,4 @@
+import { memo } from "react";
 import Image from "next/image";
 import { TrashIcon } from "@heroicons/react/24/outline";
 /**
@@ -21,12 +22,14 @@ const SelectedImage: React.FC<SelectedImageProps> = ({
       {/* show empty state if no images are selected */}
       {selectedImages.length === 0 && (
         <>
-          {Array(4).fill(0).map((_, index) => (
-            <div
-              className="rounded-lg w-full h-[65px] border border-gray-100 bg-gray-100"
-              key={index}
-            ></div>
-          ))}
+          {Array(4)
+            .fill(0)
+            .map((_, index) => (
+              <div
+                className="rounded-lg w-full h-[65px] border border-gray-100 bg-gray-100"
+                key={index}
+              ></div>
+            ))}
         </>
       )}
 
@@ -72,4 +75,4 @@ const SelectedImage: React.FC<SelectedImageProps> = ({
   );
 };
 
-export default SelectedImage;
+export default memo(SelectedImage);

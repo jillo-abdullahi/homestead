@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import SelectedImage from "@/components/imageUploader/SelectedImage";
 /**
@@ -28,11 +28,11 @@ const ImageUploader: React.FC = () => {
   };
 
   // remove a single image before uploading to api
-  const removeImage = (index: number) => {
+  const removeImage = useCallback((index: number) => {
     setSelectedImages((prevImages) =>
       prevImages.filter((_, idx) => idx !== index)
     );
-  };
+  }, []);
   return (
     <div className="space-y-3 p-4">
       <div className="block text-sm font-medium leading-6 ">
