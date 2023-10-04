@@ -4,7 +4,7 @@ import SignUpForm from "@/containers/SignupForm";
 const Login: NextPage = () => {
   return (
     <div>
-      <main className="bg-violet-100">
+      <main className="bg-gray-100">
         <SignUpForm />
       </main>
     </div>

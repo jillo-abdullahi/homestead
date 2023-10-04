@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/navbar/Navbar";
 import ListingImageGallery from "@/components/imageGallery/ListingImageGallery";
 import { listings } from "@/utils/dummyListings";
 import ListingPrice from "@/components/listingDetails/ListingPrice";

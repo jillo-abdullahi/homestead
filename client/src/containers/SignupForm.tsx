@@ -10,7 +10,7 @@ import InputFieldWithIcon from "@/components/InputFieldWithIcon";
 import isValidPassword from "@/utils/isValidPassword";
 
 /**
- * sign up form component.
+ * sign up form component to register a new user.
  * @returns
  */
 const SignupForm = () => {
@@ -96,7 +96,7 @@ const SignupForm = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-gray-100">
+    <div className="container">
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm text-center">
           <span className="font-bold text-xl text-gray-800 hover:text-gray-700 transition-all duration-100">

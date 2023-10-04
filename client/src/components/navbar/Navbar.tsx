@@ -3,24 +3,34 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
-import Avatar from "@/components/Avatar";
+import Avatar from "@/components/navbar/Avatar";
 
 /**
  * Main nav component with links to other pages
  * @prop {boolean} isLoggedin - whether user is logged in or not
+ * @prop {boolean} isOnCreateListingPage - whether user is on create listing page or not
  * @returns
  */
 
 interface NavbarProps {
   isLoggedin?: boolean;
+  isOnCreateListingPage?: boolean;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ isLoggedin = false }) => {
+const Navbar: React.FC<NavbarProps> = ({
+  isLoggedin = false,
+  isOnCreateListingPage = false,
+}) => {
   const router = useRouter();
 
   // navigate to sign up page
   const handleSignUp = () => {
     router.push("/signup");
+  };
+
+  // navigate to create listing page
+  const handleCreateListing = () => {
+    router.push("/create-listing");
   };
 
   return (
@@ -39,12 +49,18 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedin = false }) => {
       <div className="ml-auto flex space-x-3 items-center">
         {isLoggedin && (
           <div className="flex space-x-2 items-center">
-            <SecondaryButton padding="px-3 py-2" fontSize="text-base">
-              <div className="flex items-center justify-start">
-                <PlusCircleIcon className="h-5 w-5 mr-1" aria-hidden="true" />
-                <span>Add Listing</span>
-              </div>
-            </SecondaryButton>
+            {!isOnCreateListingPage && (
+              <SecondaryButton
+                padding="px-3 py-2"
+                fontSize="text-base"
+                onClick={handleCreateListing}
+              >
+                <div className="flex items-center justify-start">
+                  <PlusCircleIcon className="h-5 w-5 mr-1" aria-hidden="true" />
+                  <span>Add Listing</span>
+                </div>
+              </SecondaryButton>
+            )}
             <Avatar
               userEmail="jayloabdullahi@gmail.com"
               username="shrewdTurtle"

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/navbar/Navbar";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 
 /**
@@ -11,7 +11,7 @@ import PrimaryButton from "@/components/buttons/PrimaryButton";
 const Landing: React.FC = () => (
   <div className="flex flex-col items-center justify-start bg-violet-100 px-32">
     <div className="w-full pb-7">
-      <Navbar isLoggedin={false} />
+      <Navbar isLoggedin={true} />
     </div>
 
     <div className="w-full grid grid-cols-12 gap-x-6 h-[36rem]">

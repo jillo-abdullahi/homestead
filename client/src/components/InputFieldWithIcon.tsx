@@ -9,11 +9,12 @@ import { useState } from "react";
  * @param {string} value - value of input field
  * @param {function} onChange - onChange function
  * @param {string} id - id of input field
- * @param {string} label - label of input field
+ * @param {string | React.ReactNode } label - label of input field
  * @param {boolean} isLoginForm - if the input field is in the login form
  * @param {React.ReactNode | string} error - error message
  * @param {boolean} isRequired - if the input field is required
  * @param {boolean} isDisabled - if the input field is disabled
+ * @param {React.Ref<HTMLInputElement>} ref - ref of input field
  * @returns
  */
 
@@ -25,11 +26,12 @@ interface InputFieldWithIconProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   id: string;
-  label: string;
+  label: string | React.ReactNode;
   isLoginForm?: boolean;
   error?: string | React.ReactNode;
   isRequired?: boolean;
   isDisabled?: boolean;
+  ref?: React.Ref<HTMLInputElement>;
 }
 const InputFieldWithIcon: React.FC<InputFieldWithIconProps> = ({
   icon,
@@ -44,6 +46,7 @@ const InputFieldWithIcon: React.FC<InputFieldWithIconProps> = ({
   error,
   isRequired = false,
   isDisabled = false,
+  ref,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -98,6 +101,7 @@ const InputFieldWithIcon: React.FC<InputFieldWithIconProps> = ({
           disabled={isDisabled}
           className="block w-full rounded-md border-0 py-2.5 pl-10 text-gray-700 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-violet-700 sm:text-sm sm:leading-6"
           placeholder={placeholder}
+          ref={ref}
         />
       </div>
       {error ? (
