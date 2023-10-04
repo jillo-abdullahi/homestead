@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
-import { MapPinIcon } from "@heroicons/react/24/outline";
-import Image from "next/image";
+import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import ListingImageGallery from "@/components/imageGallery/ListingImageGallery";
 import { listings } from "@/utils/dummyListings";
@@ -14,15 +13,39 @@ import ListingTitle from "@/components/listingDetails/ListingTitle";
  * @returns
  */
 
+interface Listing {
+  id: string;
+  title: string;
+  location: string;
+  price: number;
+  bedrooms: number;
+  bathrooms: number;
+  area?: number;
+  images: Array<{ original: string; thumbnail: string }>;
+}
+
 const ListingDetails: React.FC = () => {
   const router = useRouter();
   const { listingId } = router.query;
 
-  // TODO: fetch listing details from server
+  const [currentListing, setCurrentListing] = useState<Listing | null>(null);
 
-  const sampleListing = listings[0];
+  useEffect(() => {
+    // TODO: fetch listing details from server
+    // TODO: add empty, loading, and error states
+    if (listingId) {
+      const currentListing = listings.find(
+        (listing) => listing.id === listingId
+      );
+      if (currentListing) {
+        setCurrentListing(currentListing);
+      }
+    }
+  }, [listingId]);
+
+  // TODO: fetch listing details from server
   const { title, location, price, id, bedrooms, bathrooms, area, images } =
-    sampleListing;
+    currentListing ?? {};
 
   return (
     <div className="container">
@@ -31,7 +54,9 @@ const ListingDetails: React.FC = () => {
       <div className="flex flex-col items-center justify-center md:grid md:grid-cols-12 gap-6 mt-10">
         <div className="w-full md:col-span-8">
           {/* image carousel */}
-          {listingId && <ListingImageGallery images={images} />}
+          {currentListing && (
+            <ListingImageGallery images={currentListing.images} />
+          )}
         </div>
         <div className="w-full h-full md:col-span-4 space-y-4 flex flex-col items-start justify-center">
           {/* title and location  */}

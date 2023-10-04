@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { useRouter } from "next/router";
 import { BuildingOffice2Icon, MapPinIcon } from "@heroicons/react/24/outline";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import ListingPrice from "@/components/listingDetails/ListingPrice";
@@ -39,6 +39,13 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
   bathrooms,
   area,
 }) => {
+  const router = useRouter();
+  // view full listing details
+  const handleViewListing = () => {
+    if (id) {
+      router.push(`/listing/${id}`);
+    }
+  };
   return (
     <div className="w-full rounded-lg p-5 grid grid-cols-12 gap-x-2 shadow-md max-w-3xl border">
       {!image && (
@@ -69,7 +76,7 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
         </div>
       </div>
       <div className="col-span-3 h-full flex items-center justify-center">
-        <SecondaryButton>
+        <SecondaryButton onClick={handleViewListing}>
           <div className="flex items-center justify-center space-x-2">
             <BuildingOffice2Icon className="h-5 w-5" aria-hidden="true" />
             <span>View</span>
