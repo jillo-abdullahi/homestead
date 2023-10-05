@@ -32,7 +32,6 @@ const Landing: React.FC = () => (
           <SearchInputField placeholder="Search for a location, town, or estate" />
         </div>
       </div>
-      <div className="col-span-6"></div>
     </div>
   </div>
 );

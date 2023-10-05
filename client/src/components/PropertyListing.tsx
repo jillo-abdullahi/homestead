@@ -1,9 +1,5 @@
 import { useRouter } from "next/router";
 import { BuildingOffice2Icon, MapPinIcon } from "@heroicons/react/24/outline";
-import SecondaryButton from "@/components/buttons/SecondaryButton";
-import ListingPrice from "@/components/listingDetails/ListingPrice";
-import ListingSpecs from "@/components/listingDetails/ListingSpecs";
-import ListingTitle from "@/components/listingDetails/ListingTitle";
 
 /**
  * component that displays a single property listing
@@ -47,43 +43,30 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
     }
   };
   return (
-    <div className="w-full rounded-lg p-5 grid grid-cols-12 gap-x-2 shadow-md max-w-3xl border">
-      {!image && (
-        <div className="col-span-4 w-[200px] h-[200px] rounded-md bg-gray-300"></div>
-      )}
-      {image && (
-        <img
-          src={image}
-          alt="property image"
-          width={200}
-          className="col-span-4 rounded-md my-auto"
-        />
-      )}
-      <div className="col-span-5 flex flex-col space-y-6 justify-center">
-        {/* title and location  */}
-        <ListingTitle title={title} location={location ?? ""} />
-
-        <div className="space-y-3">
-          {/* listing specs  */}
-          <ListingSpecs
-            bedrooms={bedrooms ?? 0}
-            bathrooms={bathrooms ?? 0}
-            area={area ?? 0}
-          />
-
-          {/* price  */}
-          {<ListingPrice price={price ?? 0} />}
+    <button
+      onClick={handleViewListing}
+      className="flex flex-col items-center justify-between h-[12rem] rounded-lg bg-white border border-gray-200 p-2 transition-all duration-150 hover:border-2 hover:border-violet-700"
+    >
+      <div
+        className="rounded-md w-full h-1/2"
+        style={{
+          background: `url('${image}') no-repeat center center`,
+          backgroundSize: "cover",
+        }}
+      ></div>
+      <div className="space-y-1 w-full h-[4.5rem] text-left">
+        <div className="text-gray-700 text-xs font-medium text-left line-clamp-2">
+          {title}
+        </div>
+        <div className="text-violet-700 font-bold text-sm line-clamp-1">
+          ${price?.toLocaleString()}
+        </div>
+        <div className="text-gray-500 text-xs font-medium flex items-center justify-start space-x-1 mb-1">
+          <MapPinIcon className="w-3 h-3" aria-hidden="true" />
+          <span className="line-clamp-1">{location}</span>
         </div>
       </div>
-      <div className="col-span-3 h-full flex items-center justify-center">
-        <SecondaryButton onClick={handleViewListing}>
-          <div className="flex items-center justify-center space-x-2">
-            <BuildingOffice2Icon className="h-5 w-5" aria-hidden="true" />
-            <span>View</span>
-          </div>
-        </SecondaryButton>
-      </div>
-    </div>
+    </button>
   );
 };
 

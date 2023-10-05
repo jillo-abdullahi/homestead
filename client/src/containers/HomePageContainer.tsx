@@ -4,7 +4,7 @@ import Landing from "@/components/Landing";
  * @returns
  */
 const HomePageContainer = () => (
-  <div className="w-full min-h-screen">
+  <div className="w-full">
     <Landing />
   </div>
 );
