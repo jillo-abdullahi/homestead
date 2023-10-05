@@ -3,10 +3,10 @@ import Landing from "@/components/Landing";
  * Home page.
  * @returns
  */
-const HomePage = () => (
+const HomePageContainer = () => (
   <div className="w-full min-h-screen">
     <Landing />
   </div>
 );
 
-export default HomePage;
+export default HomePageContainer;

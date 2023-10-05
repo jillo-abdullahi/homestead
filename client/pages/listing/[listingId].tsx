@@ -1,11 +1,11 @@
 import { NextPage } from "next";
-import ListingDetais from "@/containers/ListingDetails";
+import ListingDetailsContainer from "@/containers/ListingDetailsContainer";
 
 const Login: NextPage = () => {
   return (
     <div>
       <main className="bg-white">
-        <ListingDetais />
+        <ListingDetailsContainer />
       </main>
     </div>
   );

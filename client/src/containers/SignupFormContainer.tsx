@@ -6,14 +6,14 @@ import {
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
-import InputFieldWithIcon from "@/components/InputFieldWithIcon";
+import InputFieldWithIcon from "@/components/inputFields/InputFieldWithIcon";
 import isValidPassword from "@/utils/isValidPassword";
 
 /**
  * sign up form component to register a new user.
  * @returns
  */
-const SignupForm = () => {
+const SignupFormContainer = () => {
   const [signUpDetails, setSignUpDetails] = useState({
     username: "",
     email: "",
@@ -190,4 +190,4 @@ const SignupForm = () => {
   );
 };
 
-export default SignupForm;
+export default SignupFormContainer;

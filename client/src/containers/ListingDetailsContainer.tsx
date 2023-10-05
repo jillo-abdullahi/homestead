@@ -24,7 +24,7 @@ interface Listing {
   images: Array<{ original: string; thumbnail: string }>;
 }
 
-const ListingDetails: React.FC = () => {
+const ListingDetailsContainer: React.FC = () => {
   const router = useRouter();
   const { listingId } = router.query;
 
@@ -88,4 +88,4 @@ const ListingDetails: React.FC = () => {
   );
 };
 
-export default ListingDetails;
+export default ListingDetailsContainer;

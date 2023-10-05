@@ -1,11 +1,11 @@
 import { NextPage } from "next";
-import LoginForm from "@/containers/LoginForm";
+import LoginFormContainer from "@/containers/LoginFormContainer";
 
 const Login: NextPage = () => {
   return (
     <div>
       <main className="bg-gray-100">
-        <LoginForm />
+        <LoginFormContainer />
       </main>
     </div>
   );

@@ -1,4 +1,4 @@
-import InputFieldWithIcon from "@/components/InputFieldWithIcon";
+import InputFieldWithIcon from "@/components/inputFields/InputFieldWithIcon";
 import IsRequiredLabel from "@/components/IsRequiredLabel";
 import ImageUploader from "@/components/imageUploader/ImageUploader";
 import PrimaryButton from "@/components/buttons/PrimaryButton";

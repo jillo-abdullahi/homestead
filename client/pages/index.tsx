@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import HomePage from "@/containers/HomePage";
+import HomePageContainer from "@/containers/HomePageContainer";
 import PropertyListing from "@/components/PropertyListing";
 import { listings } from "@/utils/dummyListings";
 
@@ -14,7 +14,7 @@ const Home: NextPage = () => {
       </Head>
 
       <main className="bg-white">
-        <HomePage />
+        <HomePageContainer />
         <div className="flex flex-col items-center mt-6 space-y-4">
           {listings.map(
             ({ id, location, images, bathrooms, bedrooms, area, title , price}) => (

@@ -2,13 +2,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { EnvelopeIcon, LockClosedIcon } from "@heroicons/react/24/outline";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
-import InputFieldWithIcon from "@/components/InputFieldWithIcon";
+import InputFieldWithIcon from "@/components/inputFields/InputFieldWithIcon";
 
 /**
  * Login form component.
  * @returns
  */
-const LoginForm = () => {
+const LoginFormContainer = () => {
   const [loginDetails, setLoginDetails] = useState({
     email: "",
     password: "",
@@ -102,4 +102,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default LoginFormContainer;
