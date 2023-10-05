@@ -1,11 +1,11 @@
 import { NextPage } from "next";
-import CreateListingForm from "@/containers/CreateListingForm";
+import CreateListingContainer from "@/containers/CreateListingContainer";
 
 const CreateListing: NextPage = () => {
   return (
     <div>
       <main className="bg-gray-100">
-        <CreateListingForm />
+        <CreateListingContainer />
       </main>
     </div>
   );
