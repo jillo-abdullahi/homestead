@@ -1,13 +1,17 @@
 import { NextPage } from "next";
+import Navbar from "@/components/navbar/Navbar";
+import Footer from "@/components/Footer";
 import ListingDetailsContainer from "@/containers/ListingDetailsContainer";
 
 const Login: NextPage = () => {
   return (
-    <div>
-      <main className="bg-white">
+    <main className="flex flex-col min-h-screen">
+      <div className="flex-grow container">
+        <Navbar />
         <ListingDetailsContainer />
-      </main>
-    </div>
+      </div>
+      <Footer />
+    </main>
   );
 };
 

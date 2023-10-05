@@ -1,13 +1,15 @@
 import { NextPage } from "next";
 import CreateListingContainer from "@/containers/CreateListingContainer";
+import Navbar from "@/components/navbar/Navbar";
 
 const CreateListing: NextPage = () => {
   return (
-    <div>
-      <main className="bg-gray-100">
+    <main className="bg-gray-100 flex flex-col">
+      <div className="flex-grow container">
+        <Navbar isLoggedin={true} isOnCreateListingPage={true} />
         <CreateListingContainer />
-      </main>
-    </div>
+      </div>
+    </main>
   );
 };
 

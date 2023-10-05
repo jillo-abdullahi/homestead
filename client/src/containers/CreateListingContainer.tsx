@@ -59,26 +59,23 @@ const CreateListingContainer: React.FC = () => {
     []
   );
   return (
-    <div className="container">
-      <Navbar isLoggedin={true} isOnCreateListingPage={true} />
-      <div className="flex min-h-full flex-1 flex-col justify-center">
-        <div className="mt-10 sm:mx-auto sm:w-full rounded-lg bg-white p-10">
-          <div className="space-y-1 text-left">
-            <h2 className="text-2xl font-bold leading-9 tracking-tight text-gray-700">
-              Create a property listing
-            </h2>
-            <p className="text-sm leading-5 text-gray-600">
-              Fill in the details below to create your listing.
-            </p>
-          </div>
-          {/* create listing form  */}
-          <CreateListingForm
-            handleSubmitListing={handleSubmitListing}
-            handleChanges={handleChanges}
-            newListingDetails={newListingDetails}
-            formErrors={formErrors}
-          />
+    <div className="flex min-h-full flex-1 flex-col justify-center">
+      <div className="mt-10 sm:mx-auto sm:w-full rounded-lg bg-white p-10">
+        <div className="space-y-1 text-left">
+          <h2 className="text-2xl font-bold leading-9 tracking-tight text-gray-700">
+            Create a property listing
+          </h2>
+          <p className="text-sm leading-5 text-gray-600">
+            Fill in the details below to create your listing.
+          </p>
         </div>
+        {/* create listing form  */}
+        <CreateListingForm
+          handleSubmitListing={handleSubmitListing}
+          handleChanges={handleChanges}
+          newListingDetails={newListingDetails}
+          formErrors={formErrors}
+        />
       </div>
       {/* creation progress modal  */}
       <ProgressModal

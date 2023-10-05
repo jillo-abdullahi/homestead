@@ -1,10 +1,8 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import HomePageContainer from "@/containers/HomePageContainer";
-import PropertyListing from "@/components/PropertyListing";
 import Footer from "@/components/Footer";
-import ListingsEmptyState from "@/components/listingDetails/ListingsEmptyState";
-import { listings } from "@/utils/dummyListings";
+import Navbar from "@/components/navbar/Navbar";
 
 const Home: NextPage = () => {
   return (
@@ -15,50 +13,13 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="bg-white container min-h-screen">
-        <HomePageContainer />
-        <>
-          <div className="text-2xl font-bold text-gray-700 mt-7">
-            Recent Properties
-          </div>
-          <div className="text-gray-500 text-sm font-medium">
-            The surroundings are best for your lifestyle
-          </div>
-        </>
-        {listings.length > 0 && (
-          <div>
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {listings.map(
-                ({
-                  id,
-                  location,
-                  images,
-                  bathrooms,
-                  bedrooms,
-                  area,
-                  title,
-                  price,
-                }) => (
-                  <PropertyListing
-                    key={id}
-                    title={title}
-                    location={location}
-                    price={price}
-                    image={images[0].original}
-                    id={id}
-                    bedrooms={bedrooms}
-                    bathrooms={bathrooms}
-                    area={area}
-                  />
-                )
-              )}
-            </div>
-          </div>
-        )}
-
-        {listings.length === 0 && <ListingsEmptyState />}
+      <main className="flex flex-col min-h-screen">
+        <div className="flex-grow container">
+          <Navbar isLoggedin={true} />
+          <HomePageContainer />
+        </div>
+        <Footer />
       </main>
-      <Footer />
     </div>
   );
 };

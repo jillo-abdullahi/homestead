@@ -1,5 +1,5 @@
 import InputFieldWithIcon from "@/components/inputFields/InputFieldWithIcon";
-import IsRequiredLabel from "@/components/IsRequiredLabel";
+import IsRequiredLabel from "@/components/inputFields/IsRequiredLabel";
 import ImageUploader from "@/components/imageUploader/ImageUploader";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import {

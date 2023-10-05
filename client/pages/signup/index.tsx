@@ -3,11 +3,11 @@ import SignUpFormContainer from "@/containers/SignupFormContainer";
 
 const Login: NextPage = () => {
   return (
-    <div>
-      <main className="bg-gray-100">
+    <main className="bg-gray-100">
+      <div className="container">
         <SignUpFormContainer />
-      </main>
-    </div>
+      </div>
+    </main>
   );
 };
 
