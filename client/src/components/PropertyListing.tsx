@@ -55,7 +55,7 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
         }}
       ></div>
       <div className="space-y-1 w-full h-[4.5rem] text-left">
-        <div className="text-gray-700 text-xs font-medium text-left line-clamp-2">
+        <div className="text-gray-700 text-xs font-medium text-left line-clamp-2 h-8">
           {title}
         </div>
         <div className="text-violet-700 font-bold text-sm line-clamp-1">

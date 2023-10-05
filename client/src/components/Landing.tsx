@@ -10,7 +10,7 @@ import SearchInputField from "@/components/inputFields/SearchInputField";
  */
 
 const Landing: React.FC = () => (
-  <div className="flex flex-col items-center justify-start container">
+  <div className="flex flex-col items-center justify-start">
     <div className="w-full pb-2">
       <Navbar isLoggedin={true} />
     </div>
