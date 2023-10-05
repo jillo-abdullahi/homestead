@@ -53,8 +53,8 @@ const SelectedImage: React.FC<SelectedImageProps> = ({
                 </div>
 
                 <div className="space-y-1">
-                  <div className="text-gray-700">{image.name}</div>
-                  <div className="text-gray-400 text-xs">
+                  <div className="text-gray-700 line-clamp-1">{image.name}</div>
+                  <div className="text-gray-400 text-xs line-clamp-1">
                     {image.size / 1000} KB
                   </div>
                 </div>
