@@ -149,7 +149,7 @@ const SearchListingsContainer: React.FC = () => {
       </div>
 
       <div className="mt-10">
-        <div>Search results</div>
+        <div className="text-sm font-medium text-violet-700 border rounded-lg p-2 border-gray-100 w-fit">{listings.length} listings found</div>
         <SearchResults searchResults={listings} />
       </div>
     </>

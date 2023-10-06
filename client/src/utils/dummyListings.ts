@@ -145,4 +145,131 @@ export const listings = [
     area: 4000,
     location: "New York, USA",
   },
+  {
+    id: "7",
+    title: "Another listings",
+    description:
+      "This is the description for listing adding some more description text 6",
+    price: 600,
+    images: [
+      {
+        original: "https://picsum.photos/id/1018/1000/600/",
+        thumbnail: "https://picsum.photos/id/1018/250/150/",
+      },
+      {
+        original: "https://picsum.photos/id/1015/1000/600/",
+        thumbnail: "https://picsum.photos/id/1015/250/150/",
+      },
+    ],
+    bathrooms: 1,
+    bedrooms: 2,
+    area: 4000,
+    location: "New York, USA",
+  },
+  {
+    id: "8",
+    title: "Another listings",
+    description:
+      "This is the description for listing adding some more description text 6",
+    price: 600,
+    images: [
+      {
+        original: "https://picsum.photos/id/1018/1000/600/",
+        thumbnail: "https://picsum.photos/id/1018/250/150/",
+      },
+      {
+        original: "https://picsum.photos/id/1015/1000/600/",
+        thumbnail: "https://picsum.photos/id/1015/250/150/",
+      },
+    ],
+    bathrooms: 1,
+    bedrooms: 2,
+    area: 4000,
+    location: "New York, USA",
+  },
+  {
+    id: "9",
+    title: "Another listings",
+    description:
+      "This is the description for listing adding some more description text 6",
+    price: 600,
+    images: [
+      {
+        original: "https://picsum.photos/id/1018/1000/600/",
+        thumbnail: "https://picsum.photos/id/1018/250/150/",
+      },
+      {
+        original: "https://picsum.photos/id/1015/1000/600/",
+        thumbnail: "https://picsum.photos/id/1015/250/150/",
+      },
+    ],
+    bathrooms: 1,
+    bedrooms: 2,
+    area: 4000,
+    location: "New York, USA",
+  },
+  {
+    id: "7344",
+    title: "Another listings",
+    description:
+      "This is the description for listing adding some more description text 6",
+    price: 600,
+    images: [
+      {
+        original: "https://picsum.photos/id/1018/1000/600/",
+        thumbnail: "https://picsum.photos/id/1018/250/150/",
+      },
+      {
+        original: "https://picsum.photos/id/1015/1000/600/",
+        thumbnail: "https://picsum.photos/id/1015/250/150/",
+      },
+    ],
+    bathrooms: 1,
+    bedrooms: 2,
+    area: 4000,
+    location: "New York, USA",
+  },
+  {
+    id: "744",
+    title: "Another listings",
+    description:
+      "This is the description for listing adding some more description text 6",
+    price: 600,
+    images: [
+      {
+        original: "https://picsum.photos/id/1018/1000/600/",
+        thumbnail: "https://picsum.photos/id/1018/250/150/",
+      },
+      {
+        original: "https://picsum.photos/id/1015/1000/600/",
+        thumbnail: "https://picsum.photos/id/1015/250/150/",
+      },
+    ],
+    bathrooms: 1,
+    bedrooms: 2,
+    area: 4000,
+    location: "New York, USA",
+  },
+  {
+    id: "7444",
+    title: "Another listings",
+    description:
+      "This is the description for listing adding some more description text 6",
+    price: 600,
+    images: [
+      {
+        original: "https://picsum.photos/id/1018/1000/600/",
+        thumbnail: "https://picsum.photos/id/1018/250/150/",
+      },
+      {
+        original: "https://picsum.photos/id/1015/1000/600/",
+        thumbnail: "https://picsum.photos/id/1015/250/150/",
+      },
+    ],
+    bathrooms: 1,
+    bedrooms: 2,
+    area: 4000,
+    location: "New York, USA",
+  },
+
 ];

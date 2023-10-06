@@ -49,13 +49,13 @@ const ListingDetailsContainer: React.FC = () => {
   return (
     <div>
       <div className="flex flex-col items-center justify-center md:grid md:grid-cols-12 gap-6 mt-10">
-        <div className="w-full md:col-span-8">
+        <div className="w-full md:col-span-6">
           {/* image carousel */}
           {currentListing && (
             <ListingImageGallery images={currentListing.images} />
           )}
         </div>
-        <div className="w-full h-full md:col-span-4 space-y-4 flex flex-col items-start justify-center">
+        <div className="w-full h-full md:col-span-6 space-y-4 flex flex-col items-start justify-center">
           {/* title and location  */}
           <ListingTitle title={title ?? ""} location={location ?? ""} />
 
