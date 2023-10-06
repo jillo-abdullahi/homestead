@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
-import SearchInputField from "@/components/inputFields/SearchInputField";
+import SearchInputField from "@/components/searchListings/SearchInputField";
 
 /**
  * landing page component.
@@ -24,7 +24,6 @@ const Landing: React.FC = () => {
 
     // navigate to search page with search query
     router.push(`/search-listings?query=${searchQuery}`);
-    console.log(searchQuery);
   };
 
   return (

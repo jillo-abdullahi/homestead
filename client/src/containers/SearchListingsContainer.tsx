@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { CurrencyDollarIcon } from "@heroicons/react/24/outline";
 import { IconDimensions } from "@tabler/icons-react";
-import SearchInputField from "@/components/inputFields/SearchInputField";
-import SelectInputField from "@/components/inputFields/SelectInputField";
+import SearchInputField from "@/components/searchListings/SearchInputField";
+import SelectInputField from "@/components/searchListings/SelectInputField";
 import DropdownButton from "@/components/buttons/DropdownButton";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
+import SearchResults from "@/components/searchListings/SearchResults";
+import { listings } from "@/utils/dummyListings";
 import { SearchState } from "@/types";
 
 /**
@@ -44,8 +46,6 @@ const SearchListingsContainer: React.FC = () => {
       },
     }));
   };
-
-  console.log({ searchState: searchState.filters });
 
   // handle search query submit
   const handleSearchQuerySubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -146,6 +146,11 @@ const SearchListingsContainer: React.FC = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="mt-10">
+        <div>Search results</div>
+        <SearchResults searchResults={listings} />
       </div>
     </>
   );

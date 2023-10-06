@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, memo } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { SearchState } from "@/types";
@@ -114,4 +114,4 @@ const SelectInputField: React.FC<SelectInputFieldProps> = ({
   );
 };
 
-export default SelectInputField;
+export default memo(SelectInputField);
