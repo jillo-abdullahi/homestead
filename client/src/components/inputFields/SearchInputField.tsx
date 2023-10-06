@@ -1,6 +1,6 @@
 import { IconSearch } from "@tabler/icons-react";
 /**
- * input field to initiate a quick search from the homepage
+ * form to initiate a quick search from the homepage or the search page
  * @param {string} placeholder - placeholder text
  * @param {string} value - value of input field
  * @param {function} handleChange - onChange function
