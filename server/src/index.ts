@@ -44,12 +44,13 @@ builder.prismaObject("Listing", {
     id: t.exposeID("id"),
     title: t.exposeString("title"),
     description: t.exposeString("description", { nullable: true }),
-    price: t.exposeFloat("price", { nullable: true }),
-    location: t.exposeString("location", { nullable: true }),
+    price: t.exposeFloat("price", { nullable: false }),
+    location: t.exposeString("location", { nullable: false }),
     bedrooms: t.exposeInt("bedrooms", { nullable: true }),
     bathrooms: t.exposeInt("bathrooms", { nullable: true }),
     area: t.exposeInt("area", { nullable: true }),
     images: t.exposeStringList("images"),
+    user: t.relation("user", { nullable: true }),
   }),
 });
 
@@ -86,30 +87,71 @@ builder.queryType({
   }),
 });
 
-// create listing mutation
-// builder.mutationType({
-//   fields: (t) => ({
-//     createListing: t.prismaField({
-//       type: "Listing",
-//       args: {
-//         title: t.arg.string(),
-//         description: t.arg.string(),
-//         price: t.arg.float(),
-//         location: t.arg.string(),
-//         bedrooms: t.arg.int(),
-//         bathrooms: t.arg.int(),
-//         area: t.arg.int(),
-//         images: t.arg.stringList(),
-//       },
-//       resolve: async (query, root, args, ctx, info) => {
-//         return await prisma.listing.create({
-//           ...query,
-//           data: args,
-//         });
-//       },
-//     }),
-//   }),
-// });
+builder.mutationType({});
+
+builder.mutationField("createUser", (t) =>
+  t.prismaField({
+    type: "User",
+    description: "Create a new user",
+    args: {
+      email: t.arg.string({ required: true }),
+      username: t.arg.string({ required: true }),
+      password: t.arg.string({ required: true }),
+    },
+    resolve: async (query, root, args, ctx, info) =>
+      await prisma.user.create({
+        data: {
+          email: args.email,
+          username: args.username,
+          password: args.password,
+        },
+      }),
+  })
+);
+
+builder.mutationField("createListing", (t) =>
+  t.prismaField({
+    type: "Listing",
+    description: "Create a new listing",
+    args: {
+      title: t.arg.string({ required: true }),
+      description: t.arg.string(),
+      price: t.arg.float({ required: true }),
+      location: t.arg.string({ required: true }),
+      bedrooms: t.arg.int(),
+      bathrooms: t.arg.int(),
+      area: t.arg.int(),
+      images: t.arg.stringList({ required: true }),
+    },
+    resolve: async (query, root, args, ctx, info) => {
+      const {
+        title,
+        description,
+        price,
+        location,
+        bedrooms,
+        bathrooms,
+        area,
+        images,
+      } = args;
+      return await prisma.listing.create({
+        data: {
+          title,
+          description,
+          price,
+          location,
+          bedrooms,
+          bathrooms,
+          area,
+          images,
+          user: {
+            connect: { id: "b34a0d3c-c301-4ad6-bd72-d22217b39f0e" },
+          },
+        },
+      });
+    },
+  })
+);
 
 export const schema = builder.toSchema();
 

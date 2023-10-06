@@ -42,6 +42,17 @@ builder.prismaObject("Listing", {
   }),
 });
 
+// user type
+builder.prismaObject("User", {
+  name: "User",
+  fields: (t) => ({
+    id: t.exposeID("id"),
+    email: t.exposeString("email"),
+    username: t.exposeString("username", { nullable: true }),
+    password: t.exposeString("password", { nullable: true }),
+  }),
+});
+
 // all listings query
 builder.queryType({
   fields: (t) => ({
@@ -56,6 +67,38 @@ builder.queryType({
   }),
 });
 
-// single listing quer
+builder.mutationType({
+  fields: (t) => ({
+    // Add mutation that returns a simple boolean
+    post: t.boolean({
+      args: {
+        message: t.arg.string(),
+      },
+      resolve: async (root, args) => {
+        // Do something with the message
+        return true;
+      },
+    }),
+  }),
+});
+
+builder.mutationField("createUser", (t) =>
+  t.prismaField({
+    type: "User",
+    args: {
+      email: t.arg.string({ required: true }),
+      username: t.arg.string({ required: true }),
+      password: t.arg.string({ required: true }),
+    },
+    resolve: async (query, root, args, ctx, info) =>
+      await prisma.user.create({
+        data: {
+          email: args.email,
+          username: args.username,
+          password: args.password,
+        },
+      }),
+  })
+);
 
 export const schema = builder.toSchema();

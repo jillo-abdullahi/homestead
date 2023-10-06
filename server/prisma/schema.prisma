@@ -17,6 +17,7 @@ model User {
   id       String    @id @default(uuid())
   username String    @unique
   email    String    @unique
+  password String
   listings Listing[]
 
   createdAt DateTime @default(now())
@@ -27,8 +28,8 @@ model Listing {
   id          String   @id @default(uuid())
   title       String
   description String?
-  price       Float?
-  location    String?
+  price       Float
+  location    String
   bedrooms    Int?
   bathrooms   Int?
   area        Float?
