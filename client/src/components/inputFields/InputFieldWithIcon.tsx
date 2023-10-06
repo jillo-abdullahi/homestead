@@ -14,7 +14,8 @@ import { useState } from "react";
  * @param {React.ReactNode | string} error - error message
  * @param {boolean} isRequired - if the input field is required
  * @param {boolean} isDisabled - if the input field is disabled
- * @param {React.Ref<HTMLInputElement>} ref - ref of input field
+ * @param {number} min - min value of input field if number
+ * @param {number} max - max value of input field if number
  * @returns
  */
 
@@ -23,7 +24,7 @@ interface InputFieldWithIconProps {
   placeholder: string;
   type: string;
   name: string;
-  value: string;
+  value?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   id: string;
   label: string | React.ReactNode;
@@ -31,7 +32,8 @@ interface InputFieldWithIconProps {
   error?: string | React.ReactNode;
   isRequired?: boolean;
   isDisabled?: boolean;
-  ref?: React.Ref<HTMLInputElement>;
+  min?: number;
+  max?: number;
 }
 const InputFieldWithIcon: React.FC<InputFieldWithIconProps> = ({
   icon,
@@ -46,7 +48,8 @@ const InputFieldWithIcon: React.FC<InputFieldWithIconProps> = ({
   error,
   isRequired = false,
   isDisabled = false,
-  ref,
+  min,
+  max,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -101,7 +104,8 @@ const InputFieldWithIcon: React.FC<InputFieldWithIconProps> = ({
           disabled={isDisabled}
           className="block w-full rounded-md border-0 py-2.5 pl-10 text-gray-700 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-violet-700 sm:text-sm sm:leading-6"
           placeholder={placeholder}
-          ref={ref}
+          min={type === "number" ? min : undefined}
+          max={type === "number" ? max : undefined}
         />
       </div>
       {error ? (
