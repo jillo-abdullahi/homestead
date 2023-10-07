@@ -4,6 +4,7 @@ import SchemaBuilder from "@pothos/core";
 import { PrismaClient } from "@prisma/client";
 import PrismaPlugin from "@pothos/plugin-prisma";
 import { DateTimeResolver } from "graphql-scalars";
+import { createUser } from "./resolvers/createUser.js";
 // This is the default location for the generator, but this can be
 // customized as described above.
 // Using a type only import will help avoid issues with undeclared
@@ -40,6 +41,7 @@ builder.addScalarType("Date", DateTimeResolver, {});
 // generate Listing and User types from prisma schema
 builder.prismaObject("Listing", {
   name: "Listing",
+  description: "A listing",
   fields: (t) => ({
     id: t.exposeID("id"),
     title: t.exposeString("title"),
@@ -57,6 +59,7 @@ builder.prismaObject("Listing", {
 // user type
 builder.prismaObject("User", {
   name: "User",
+  description: "A user",
   fields: (t) => ({
     id: t.exposeID("id"),
     username: t.exposeString("username"),
@@ -98,14 +101,10 @@ builder.mutationField("createUser", (t) =>
       username: t.arg.string({ required: true }),
       password: t.arg.string({ required: true }),
     },
-    resolve: async (query, root, args, ctx, info) =>
-      await prisma.user.create({
-        data: {
-          email: args.email,
-          username: args.username,
-          password: args.password,
-        },
-      }),
+    resolve: async (query, root, args, ctx, info) => {
+      const { email, username, password } = args;
+      return await createUser({ email, username, password });
+    },
   })
 );
 
