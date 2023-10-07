@@ -1,15 +1,18 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import SchemaBuilder from "@pothos/core";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import PrismaPlugin from "@pothos/plugin-prisma";
 import { DateTimeResolver } from "graphql-scalars";
 import { createUser } from "./resolvers/createUser.js";
+import dotenv from "dotenv";
+dotenv.config();
 // This is the default location for the generator, but this can be
 // customized as described above.
 // Using a type only import will help avoid issues with undeclared
 // exports in esm mode
 import type PrismaTypes from "@pothos/plugin-prisma/generated";
+import { signToken } from "./utils/jwt.js";
 
 const prisma = new PrismaClient({});
 
@@ -53,6 +56,7 @@ builder.prismaObject("Listing", {
     area: t.exposeInt("area", { nullable: true }),
     images: t.exposeStringList("images"),
     user: t.relation("user", { nullable: true }),
+    createdAt: t.expose("createdAt", { nullable: false, type: "Date" }),
   }),
 });
 
@@ -65,7 +69,11 @@ builder.prismaObject("User", {
     username: t.exposeString("username"),
     email: t.exposeString("email"),
     createdAt: t.expose("createdAt", { nullable: false, type: "Date" }),
-    listings: t.relation("listings", {}),
+    token: t.string({
+      resolve: (parent) => {
+        return signToken({ email: parent.email, id: parent.id });
+      },
+    }),
   }),
 });
 

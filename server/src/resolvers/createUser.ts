@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import * as argon from "argon2";
 
 const prisma = new PrismaClient({});
