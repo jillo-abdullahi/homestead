@@ -39,3 +39,17 @@ export const verifyToken = (token: string) => {
   }
 };
 
+/**
+ * decode jwt token
+ * @param token - jwt token
+ * @returns decoded jwt token or error
+ */
+
+export const decodeToken = (token: string) => {
+  checkEnv(process.env.JWT_SECRET!);
+  try {
+    return jwt.decode(token);
+  } catch (error) {
+    throw new Error(`Error decoding token: ${error}`);
+  }
+};

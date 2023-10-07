@@ -5,6 +5,7 @@ import { PrismaClient, User } from "@prisma/client";
 import PrismaPlugin from "@pothos/plugin-prisma";
 import { DateTimeResolver } from "graphql-scalars";
 import { createUser } from "./resolvers/createUser.js";
+import { decodeToken, verifyToken } from "./utils/jwt.js";
 import dotenv from "dotenv";
 dotenv.config();
 // This is the default location for the generator, but this can be
@@ -13,6 +14,7 @@ dotenv.config();
 // exports in esm mode
 import type PrismaTypes from "@pothos/plugin-prisma/generated";
 import { signToken } from "./utils/jwt.js";
+import { JwtPayload } from "jsonwebtoken";
 
 const prisma = new PrismaClient({});
 
@@ -130,7 +132,13 @@ builder.mutationField("createListing", (t) =>
       area: t.arg.int(),
       images: t.arg.stringList({ required: true }),
     },
-    resolve: async (query, root, args, ctx, info) => {
+    resolve: async (query, root, args, ctx: any, info) => {
+      console.log(ctx)
+
+      // TODO: Put this in a resolver function
+      if (!ctx?.user) {
+        throw new Error("Unauthorized");
+      }
       const {
         title,
         description,
@@ -152,7 +160,7 @@ builder.mutationField("createListing", (t) =>
           area,
           images,
           user: {
-            connect: { id: "b34a0d3c-c301-4ad6-bd72-d22217b39f0e" },
+            connect: { id: ctx?.user?.id },
           },
         },
       });
@@ -172,6 +180,34 @@ const server = new ApolloServer({
 //  3. prepares your app to handle incoming requests
 const { url } = await startStandaloneServer(server, {
   listen: { port: 4000 },
+
+  context: async ({ req }) => {
+    // Get the user token from the headers.
+    const token = req.headers.authorization || "";
+
+    // TODO: Put this in a util function
+    if (token) {
+      verifyToken(token);
+    }
+
+    // Try to retrieve a user with the token
+    const user = token ? decodeToken(token) : null;
+
+    if (user) {
+      const { id } = user as JwtPayload;
+      const dbUser = await prisma.user.findUnique({
+        where: {
+          id,
+        },
+      });
+      return { user: dbUser };
+      // will add check for non-existent user at resolver level
+      // since we don't want to protect all queries/mutations
+    }
+
+    // Add the user to the context
+    return { user };
+  },
 });
 
 console.log(`🚀  Server ready at: ${url}`);
