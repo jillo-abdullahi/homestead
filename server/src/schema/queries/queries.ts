@@ -14,6 +14,17 @@ builder.queryType({
       args: {
         skip: t.arg.int({ required: false }),
         take: t.arg.int({ required: false }),
+
+        // filter query
+        searchQuery: t.arg.string({ required: false }),
+
+        // some specific filters
+        bedrooms: t.arg.int({ required: false }),
+        bathrooms: t.arg.int({ required: false }),
+        minPrice: t.arg.int({ required: false }),
+        maxPrice: t.arg.int({ required: false }),
+        minArea: t.arg.int({ required: false }),
+        maxArea: t.arg.int({ required: false }),
       },
       resolve: async (query, root, args, ctx, info) => {
         return await getListings({ ...args });
