@@ -1,6 +1,10 @@
 import nodemailer from "nodemailer";
-import { HTML_TEMPLATE } from "./templates/confirmEmail.js";
+import { HTML_TEMPLATE } from "./templates/emailTemplate.js";
 
+/**
+ * create nodemailer transporter
+ * @returns - nodemailer transporter
+ */
 const transporter = nodemailer.createTransport({
   service: process.env.MAIL_SERVICE,
   host: "smtp.gmail.com",
@@ -12,6 +16,11 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+/**
+ * Function to send email to user
+ * @param mailDetails - userEmail, username, url, isEmailConfirmation
+ * @returns success response or error
+ */
 const sendMail = async (mailDetails: {
   userEmail: string;
   username: string;
