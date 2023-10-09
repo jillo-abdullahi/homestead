@@ -45,7 +45,7 @@ builder.prismaObject("Listing", {
   name: "Listing",
   description: "A listing",
   fields: (t) => ({
-    id: t.exposeID("id"),
+    id: t.exposeString("id"),
     title: t.exposeString("title"),
     description: t.exposeString("description", { nullable: true }),
     price: t.exposeFloat("price", { nullable: false }),
@@ -64,7 +64,7 @@ builder.prismaObject("User", {
   name: "User",
   description: "A user",
   fields: (t) => ({
-    id: t.exposeID("id"),
+    id: t.exposeString("id"),
     username: t.exposeString("username"),
     email: t.exposeString("email"),
     createdAt: t.expose("createdAt", { nullable: false, type: "Date" }),
@@ -78,7 +78,7 @@ builder.prismaObject("User", {
 });
 
 // all listings query
-//TODO: add total records count
+//TODO: add total records count for listings
 builder.queryType({
   fields: (t) => ({
     listings: t.prismaField({
@@ -95,51 +95,70 @@ builder.queryType({
         });
       },
     }),
+
+    listing: t.prismaField({
+      type: "Listing",
+      args: {
+        id: t.arg.string({ required: true }),
+      },
+      resolve: async (query, root, args, ctx, info) => {
+        const { id } = args;
+
+        const listing = await prisma.listing.findUnique({
+          where: {
+            id,
+          },
+        });
+
+        if (!listing) {
+          throw new Error(`Listing with id ${id} not found`);
+        }
+        return listing;
+      },
+    }),
   }),
 });
 
-builder.mutationType({});
+// mutations
+builder.mutationType({
+  fields: (t) => ({
+    createUser: t.prismaField({
+      type: "User",
+      description: "Create a new user",
+      args: {
+        email: t.arg.string({ required: true }),
+        username: t.arg.string({ required: true }),
+        password: t.arg.string({ required: true }),
+      },
+      resolve: async (query, root, args, ctx, info) => {
+        const { email, username, password } = args;
+        return await createUser({ email, username, password });
+      },
+    }),
+    createListing: t.prismaField({
+      type: "Listing",
+      description: "Create a new listing",
+      args: {
+        title: t.arg.string({ required: true }),
+        description: t.arg.string({ required: false }),
+        price: t.arg.float({ required: true }),
+        location: t.arg.string({ required: true }),
+        bedrooms: t.arg.int({ required: false }),
+        bathrooms: t.arg.int({ required: false }),
+        area: t.arg.int({ required: false }),
+        images: t.arg.stringList({ required: true }),
+      },
+      resolve: async (query, root, args, ctx, info) => {
+        const { user } = ctx as { user: User };
+        if (!user) {
+          throw new Error("User is not authenticated");
+        }
 
-builder.mutationField("createUser", (t) =>
-  t.prismaField({
-    type: "User",
-    description: "Create a new user",
-    args: {
-      email: t.arg.string({ required: true }),
-      username: t.arg.string({ required: true }),
-      password: t.arg.string({ required: true }),
-    },
-    resolve: async (query, root, args, ctx, info) => {
-      const { email, username, password } = args;
-      return await createUser({ email, username, password });
-    },
-  })
-);
-
-builder.mutationField("createListing", (t) =>
-  t.prismaField({
-    type: "Listing",
-    description: "Create a new listing",
-    args: {
-      title: t.arg.string({ required: true }),
-      description: t.arg.string({ required: false }),
-      price: t.arg.float({ required: true }),
-      location: t.arg.string({ required: true }),
-      bedrooms: t.arg.int({ required: false }),
-      bathrooms: t.arg.int({ required: false }),
-      area: t.arg.int({ required: false }),
-      images: t.arg.stringList({ required: true }),
-    },
-    resolve: async (query, root, args, ctx, info) => {
-      const { user } = ctx as { user: User };
-      if (!user) {
-        throw new Error("User is not authenticated");
-      }
-
-      return await createListing({ ...args }, user);
-    },
-  })
-);
+        return await createListing({ ...args }, user);
+      },
+    }),
+  }),
+});
 
 export const schema = builder.toSchema();
 
