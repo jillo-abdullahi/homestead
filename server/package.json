@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "copy-templates": "cpx \"src/mail/templates/**/*\" dist/mail/templates/",
     "compile": "tsc",
     "start": "npm run compile && node ./dist/index.js",
     "start:dev": "tsc-watch --onSuccess \"nodemon ./dist/index.js\""
@@ -22,15 +23,18 @@
     "dotenv": "^16.3.1",
     "graphql": "^16.8.1",
     "graphql-scalars": "^1.22.2",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.5"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.3",
     "@types/node": "^20.8.0",
+    "@types/nodemailer": "^6.4.11",
     "nodemon": "^3.0.1",
     "prisma": "^5.3.1",
     "ts-node": "^10.9.1",
     "tsc-watch": "^6.0.4",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.2.2"
   }
 }

@@ -1,6 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import * as argon from "argon2";
 
+// TODO: update these imports
+import sendMail from "../mail/index.js";
+import { signToken } from "../utils/jwt.js";
+
 const prisma = new PrismaClient({});
 /**
  * resolver function to create a new user
@@ -25,13 +29,32 @@ const createUser = async (args: {
 
   // create user
   try {
-    return await prisma.user.create({
+    const user = await prisma.user.create({
       data: {
         email,
         username,
         password: hashedPassword,
       },
     });
+
+    // generate token and url to confirm user registration
+    const confirmationToken = await signToken({
+      id: user.id,
+      email: user.email,
+    });
+    const url = `${process.env.CLIENT_BASE_URL}/auth/confirm-email?token=${confirmationToken}`;
+
+    // send confirmation email
+    const resp = await sendMail({
+      userEmail: email,
+      username,
+      url,
+      isEmailConfirmation: true,
+    });
+
+    console.log({ "EMAIL SENDING RESP": resp });
+
+    return user;
   } catch (error: any) {
     if (error.code === "P2002") {
       throw new Error(`User with ${error.meta?.target} already exists`);

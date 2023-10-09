@@ -71,6 +71,7 @@ builder.prismaObject("User", {
     username: t.exposeString("username"),
     email: t.exposeString("email"),
     createdAt: t.expose("createdAt", { nullable: false, type: "Date" }),
+    confirmed: t.exposeBoolean("confirmed", { nullable: false }),
     token: t.string({
       resolve: (parent) => {
         return signToken({ email: parent.email, id: parent.id });
@@ -133,7 +134,7 @@ builder.mutationField("createListing", (t) =>
       images: t.arg.stringList({ required: true }),
     },
     resolve: async (query, root, args, ctx: any, info) => {
-      console.log(ctx)
+      console.log(ctx);
 
       // TODO: Put this in a resolver function
       if (!ctx?.user) {
