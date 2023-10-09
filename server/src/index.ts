@@ -1,13 +1,15 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import SchemaBuilder from "@pothos/core";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import PrismaPlugin from "@pothos/plugin-prisma";
 import { DateTimeResolver } from "graphql-scalars";
-import { createUser } from "./resolvers/createUser.js";
 import dotenv from "dotenv";
 import type PrismaTypes from "@pothos/plugin-prisma/generated";
+import { createUser } from "./resolvers/createUser.js";
+import { createListing } from "./resolvers/createListing.js";
 import { signToken } from "./utils/jwt.js";
+
 import { getUserFromToken } from "./utils/getUserFromToken.js";
 
 dotenv.config();
@@ -120,46 +122,21 @@ builder.mutationField("createListing", (t) =>
     description: "Create a new listing",
     args: {
       title: t.arg.string({ required: true }),
-      description: t.arg.string(),
+      description: t.arg.string({ required: false }),
       price: t.arg.float({ required: true }),
       location: t.arg.string({ required: true }),
-      bedrooms: t.arg.int(),
-      bathrooms: t.arg.int(),
-      area: t.arg.int(),
+      bedrooms: t.arg.int({ required: false }),
+      bathrooms: t.arg.int({ required: false }),
+      area: t.arg.int({ required: false }),
       images: t.arg.stringList({ required: true }),
     },
-    resolve: async (query, root, args, ctx: any, info) => {
-      console.log(ctx);
-
-      // TODO: Put this in a resolver function
-      if (!ctx?.user) {
-        throw new Error("Unauthorized");
+    resolve: async (query, root, args, ctx, info) => {
+      const { user } = ctx as { user: User };
+      if (!user) {
+        throw new Error("User is not authenticated");
       }
-      const {
-        title,
-        description,
-        price,
-        location,
-        bedrooms,
-        bathrooms,
-        area,
-        images,
-      } = args;
-      return await prisma.listing.create({
-        data: {
-          title,
-          description,
-          price,
-          location,
-          bedrooms,
-          bathrooms,
-          area,
-          images,
-          user: {
-            connect: { id: ctx?.user?.id },
-          },
-        },
-      });
+
+      return await createListing({ ...args }, user);
     },
   })
 );
