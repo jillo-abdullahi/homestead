@@ -7,7 +7,10 @@ import {
   confirmUser,
   loginUser,
 } from "../../resolvers/user/index.js";
-import { createListing } from "../../resolvers/listings/index.js";
+import {
+  createListing,
+  updateListing,
+} from "../../resolvers/listings/index.js";
 
 builder.mutationType({
   // create a new user
@@ -47,6 +50,31 @@ builder.mutationType({
         }
 
         return await createListing({ ...args }, user);
+      },
+    }),
+
+    // update listing
+    updateListing: t.prismaField({
+      type: "Listing",
+      description: "Update a listing",
+      args: {
+        id: t.arg.string({ required: true }),
+        title: t.arg.string({ required: true }),
+        description: t.arg.string({ required: false }),
+        price: t.arg.float({ required: true }),
+        location: t.arg.string({ required: true }),
+        bedrooms: t.arg.int({ required: false }),
+        bathrooms: t.arg.int({ required: false }),
+        area: t.arg.int({ required: false }),
+        images: t.arg.stringList({ required: true }),
+      },
+      resolve: async (query, root, args, ctx, info) => {
+        const { user } = ctx as { user: User };
+        if (!user) {
+          throw new Error("User is not authenticated");
+        }
+
+        return await updateListing({ ...args }, user);
       },
     }),
 
