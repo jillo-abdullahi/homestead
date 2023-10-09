@@ -8,6 +8,7 @@ import dotenv from "dotenv";
 import type PrismaTypes from "@pothos/plugin-prisma/generated";
 import { createUser } from "./resolvers/createUser.js";
 import { createListing } from "./resolvers/createListing.js";
+import { loginUser } from "./resolvers/loginUser.js";
 import { signToken } from "./utils/jwt.js";
 
 import { getUserFromToken } from "./utils/getUserFromToken.js";
@@ -155,6 +156,20 @@ builder.mutationType({
         }
 
         return await createListing({ ...args }, user);
+      },
+    }),
+
+    loginUser: t.prismaField({
+      type: "User",
+      description: "Login user",
+      args: {
+        email: t.arg.string({ required: true }),
+        password: t.arg.string({ required: true }),
+      },
+      resolve: async (query, root, args, ctx, info) => {
+        const { email, password } = args;
+
+        return await loginUser({ email, password });
       },
     }),
   }),
