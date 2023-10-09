@@ -23,10 +23,13 @@ const sendMail = async (mailDetails: {
   let bodyText =
     "Thank you for signing up with Homestead!&#128525; To complete your registration, please click the button below to confirm your email address:";
   let subject = "Confirm Homestead email";
+  let buttonText = "Confirm Email Address";
+
   if (!isEmailConfirmation) {
     bodyText =
       "You have requested to reset your password. Please click the button below to reset your password:";
     subject = "Reset Homestead password";
+    buttonText = "Reset Password";
   }
 
   try {
@@ -34,7 +37,7 @@ const sendMail = async (mailDetails: {
       from: process.env.MAIL_FROM,
       to: userEmail,
       subject,
-      html: HTML_TEMPLATE(username, url, bodyText),
+      html: HTML_TEMPLATE(username, url, bodyText, buttonText),
     });
     return info;
   } catch (error) {

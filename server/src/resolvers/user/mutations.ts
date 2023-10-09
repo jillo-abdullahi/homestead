@@ -62,7 +62,6 @@ export const createUser = async (args: {
   }
 };
 
-
 /**
  * resolver function to confirm a user's email
  * @param args - confirmation JWT token
@@ -70,48 +69,121 @@ export const createUser = async (args: {
  */
 
 export const confirmUser = async (user: User) => {
-    const { id, confirmed } = user;
-    if (confirmed) {
-      throw new Error("User already confirmed");
-    }
-    try {
-      return await prisma.user.update({
-        where: {
-          id,
-        },
-        data: {
-          confirmed: true,
-        },
-      });
-    } catch (error) {
-      throw new Error(`Error confirming user: ${error}`);
-    }
-  };
+  const { id, confirmed } = user;
+  if (confirmed) {
+    throw new Error("User already confirmed");
+  }
+  try {
+    return await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        confirmed: true,
+      },
+    });
+  } catch (error) {
+    throw new Error(`Error confirming user: ${error}`);
+  }
+};
 
-  /**
+/**
  * resolver function to login a user
  * @param args - email, password
  * @returns - user info and token
  */
 
 export const loginUser = async (args: { email: string; password: string }) => {
-    const { email, password } = args;
-    const user = await prisma.user.findUnique({
+  const { email, password } = args;
+  const user = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  if (!user) {
+    throw new Error(`User not found`);
+  }
+
+  const isValidPassword = await verifyPassword(user.password, password);
+
+  if (!isValidPassword) {
+    throw new Error("Invalid credentials");
+  }
+
+  return user;
+};
+
+/**
+ * resolver function to reset user password
+ * @param args - email
+ * @returns - user info after sending reset password email
+ */
+export const resetPassword = async (args: { email: string }) => {
+  const { email } = args;
+  const user = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  if (!user) {
+    throw new Error(`User not found`);
+  }
+
+  // generate token and url to reset user password
+  const resetToken = await signToken({
+    id: user.id,
+    email: user.email,
+    confirmed: user.confirmed,
+  });
+  const url = `${process.env.CLIENT_BASE_URL}/auth/reset-password?token=${resetToken}`;
+
+  // send reset password email
+  await sendMail({
+    userEmail: email,
+    username: user.username,
+    url,
+    isEmailConfirmation: false,
+  });
+
+  return user;
+};
+
+/**
+ * resolver function to update user password
+ * @param args - password, token
+ * @returns - user info after updating password
+ */
+
+export const updatePassword = async (
+  args: {
+    password: string;
+  },
+  user: User
+) => {
+  const { password } = args;
+
+  // hash password
+  let hashedPassword: string;
+  try {
+    hashedPassword = await hashPassword(password);
+  } catch (error) {
+    throw new Error(`Error hashing password: ${error}`);
+  }
+  const { email } = user;
+
+  // update user password
+  try {
+    return await prisma.user.update({
       where: {
         email,
       },
+      data: {
+        password: hashedPassword,
+      },
     });
-  
-    if (!user) {
-      throw new Error(`User not found`);
-    }
-  
-    const isValidPassword = await verifyPassword(user.password, password);
-  
-    if (!isValidPassword) {
-      throw new Error("Invalid credentials");
-    }
-  
-    return user;
-  };
-
+  } catch (error) {
+    throw new Error(`Error updating password: ${error}`);
+  }
+};

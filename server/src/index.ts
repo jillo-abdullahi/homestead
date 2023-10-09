@@ -6,12 +6,15 @@ import PrismaPlugin from "@pothos/plugin-prisma";
 import { DateTimeResolver } from "graphql-scalars";
 import dotenv from "dotenv";
 import type PrismaTypes from "@pothos/plugin-prisma/generated";
-import { createUser, confirmUser, loginUser } from "./resolvers/user/index.js";
+import {
+  createUser,
+  confirmUser,
+  loginUser,
+  resetPassword,
+  updatePassword,
+} from "./resolvers/user/index.js";
 import { createListing } from "./resolvers/listings/index.js";
-
-import { signToken } from "./utils/jwt.js";
-
-import { getUserFromToken } from "./utils/getUserFromToken.js";
+import { signToken, getUserFromToken } from "./utils/index.js";
 
 dotenv.config();
 const prisma = new PrismaClient({});
@@ -180,8 +183,7 @@ builder.mutationType({
 
     confirmUser: t.prismaField({
       type: "User",
-      description: "Confirm user",
-
+      description: "Confirm user email",
       resolve: async (query, root, args, ctx, info) => {
         const { user } = ctx as { user: User };
         if (!user) {
@@ -189,6 +191,34 @@ builder.mutationType({
         }
 
         return await confirmUser(user);
+      },
+    }),
+
+    resetPassword: t.prismaField({
+      type: "User",
+      description: "Reset user password - send reset password email",
+      args: {
+        email: t.arg.string({ required: true }),
+      },
+      resolve: async (query, root, args, ctx, info) => {
+        const { email } = args;
+        return await resetPassword({ email });
+      },
+    }),
+
+    updatePassword: t.prismaField({
+      type: "User",
+      description: "Update user password",
+      args: {
+        password: t.arg.string({ required: true }),
+      },
+      resolve: async (query, root, args, ctx, info) => {
+        const { user } = ctx as { user: User };
+        if (!user) {
+          throw new Error("User not found");
+        }
+
+        return await updatePassword({ ...args }, user);
       },
     }),
   }),

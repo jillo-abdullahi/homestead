@@ -3,13 +3,15 @@
  * @param {string} username - username of the user
  * @param {string} url - url to confirm email or reset password
  * @param {string} bodyText - body text of the email
+ * @param {string} buttonText - button text of the email
  * @returns
  */
 
 export const HTML_TEMPLATE = (
   username: string,
   url: string,
-  bodyText: string
+  bodyText: string,
+  buttonText: string
 ) => {
   return `
       <!DOCTYPE html>
@@ -68,11 +70,11 @@ export const HTML_TEMPLATE = (
             <div class="message">
                 <p>Hi ${username},</p>
                 <p>
-                Thank you for signing up with Homestead!&#128525; To complete your registration, please click the button below to confirm your email address:
+                ${bodyText}
                 </p>
             </div>
             <div class="button-container">
-                <a href="${url}" class="button" target="_blank">Confirm Email Address</a>
+                <a href="${url}" class="button" target="_blank">${buttonText}</a>
             </div>
             <div class="footer">
                 <p>
