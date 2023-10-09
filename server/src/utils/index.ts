@@ -1,2 +1,2 @@
-export * from "@/utils/hashPassword";
-export * from "@/utils/jwt";
+export * from "./hashPassword.js";
+export * from "./jwt.js";

@@ -6,10 +6,9 @@ import PrismaPlugin from "@pothos/plugin-prisma";
 import { DateTimeResolver } from "graphql-scalars";
 import dotenv from "dotenv";
 import type PrismaTypes from "@pothos/plugin-prisma/generated";
-import { createUser } from "./resolvers/createUser.js";
-import { createListing } from "./resolvers/createListing.js";
-import { confirmUser } from "./resolvers/confirmUser.js";
-import { loginUser } from "./resolvers/loginUser.js";
+import { createUser, confirmUser, loginUser } from "./resolvers/user/index.js";
+import { createListing } from "./resolvers/listings/index.js";
+
 import { signToken } from "./utils/jwt.js";
 
 import { getUserFromToken } from "./utils/getUserFromToken.js";
