@@ -52,8 +52,6 @@ const createUser = async (args: {
       isEmailConfirmation: true,
     });
 
-    console.log({ "EMAIL SENDING RESP": resp });
-
     return user;
   } catch (error: any) {
     if (error.code === "P2002") {

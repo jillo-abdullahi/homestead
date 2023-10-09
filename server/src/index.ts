@@ -1,21 +1,16 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import SchemaBuilder from "@pothos/core";
-import { PrismaClient, User } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import PrismaPlugin from "@pothos/plugin-prisma";
 import { DateTimeResolver } from "graphql-scalars";
 import { createUser } from "./resolvers/createUser.js";
-import { decodeToken, verifyToken } from "./utils/jwt.js";
 import dotenv from "dotenv";
-dotenv.config();
-// This is the default location for the generator, but this can be
-// customized as described above.
-// Using a type only import will help avoid issues with undeclared
-// exports in esm mode
 import type PrismaTypes from "@pothos/plugin-prisma/generated";
 import { signToken } from "./utils/jwt.js";
-import { JwtPayload } from "jsonwebtoken";
+import { getUserFromToken } from "./utils/getUserFromToken.js";
 
+dotenv.config();
 const prisma = new PrismaClient({});
 
 const builder = new SchemaBuilder<{
@@ -186,25 +181,8 @@ const { url } = await startStandaloneServer(server, {
     // Get the user token from the headers.
     const token = req.headers.authorization || "";
 
-    // TODO: Put this in a util function
-    if (token) {
-      verifyToken(token);
-    }
-
-    // Try to retrieve a user with the token
-    const user = token ? decodeToken(token) : null;
-
-    if (user) {
-      const { id } = user as JwtPayload;
-      const dbUser = await prisma.user.findUnique({
-        where: {
-          id,
-        },
-      });
-      return { user: dbUser };
-      // will add check for non-existent user at resolver level
-      // since we don't want to protect all queries/mutations
-    }
+    // get user from token
+    const user = await getUserFromToken(token);
 
     // Add the user to the context
     return { user };
