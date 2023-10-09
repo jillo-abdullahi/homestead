@@ -8,6 +8,7 @@ import dotenv from "dotenv";
 import type PrismaTypes from "@pothos/plugin-prisma/generated";
 import { createUser } from "./resolvers/createUser.js";
 import { createListing } from "./resolvers/createListing.js";
+import { confirmUser } from "./resolvers/confirmUser.js";
 import { loginUser } from "./resolvers/loginUser.js";
 import { signToken } from "./utils/jwt.js";
 
@@ -72,7 +73,12 @@ builder.prismaObject("User", {
     confirmed: t.exposeBoolean("confirmed", { nullable: false }),
     token: t.string({
       resolve: (parent) => {
-        return signToken({ email: parent.email, id: parent.id });
+        const { email, id, confirmed } = parent;
+        return signToken({
+          email,
+          id,
+          confirmed,
+        });
       },
     }),
   }),
@@ -170,6 +176,20 @@ builder.mutationType({
         const { email, password } = args;
 
         return await loginUser({ email, password });
+      },
+    }),
+
+    confirmUser: t.prismaField({
+      type: "User",
+      description: "Confirm user",
+
+      resolve: async (query, root, args, ctx, info) => {
+        const { user } = ctx as { user: User };
+        if (!user) {
+          throw new Error("User not found");
+        }
+
+        return await confirmUser(user);
       },
     }),
   }),

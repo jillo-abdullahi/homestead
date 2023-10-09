@@ -16,7 +16,7 @@ export const checkEnv = (data: string) => {
  * @param data - email and id
  * @returns signed jwt token string or error
  */
-export const signToken = (data: { email: string; id: string }) => {
+export const signToken = (data: { email: string; id: string, confirmed: boolean }) => {
   checkEnv(process.env.JWT_SECRET!);
   try {
     return jwt.sign(data, process.env.JWT_SECRET!, { expiresIn: "7d" });

@@ -41,11 +41,12 @@ const createUser = async (args: {
     const confirmationToken = await signToken({
       id: user.id,
       email: user.email,
+      confirmed: user.confirmed,
     });
     const url = `${process.env.CLIENT_BASE_URL}/auth/confirm-email?token=${confirmationToken}`;
 
     // send confirmation email
-    const resp = await sendMail({
+    await sendMail({
       userEmail: email,
       username,
       url,

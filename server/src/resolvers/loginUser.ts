@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 import { verifyPassword } from "../utils/hashPassword.js";
-import { signToken } from "../utils/jwt.js";
 const prisma = new PrismaClient({});
 /**
  * resolver function to login a user

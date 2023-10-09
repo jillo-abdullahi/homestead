@@ -29,19 +29,24 @@ export const createListing = async (
     area,
     images,
   } = args;
-  return await prisma.listing.create({
-    data: {
-      title,
-      description,
-      price,
-      location,
-      bedrooms,
-      bathrooms,
-      area,
-      images,
-      user: {
-        connect: { id: user?.id },
+
+  try {
+    return await prisma.listing.create({
+      data: {
+        title,
+        description,
+        price,
+        location,
+        bedrooms,
+        bathrooms,
+        area,
+        images,
+        user: {
+          connect: { id: user?.id },
+        },
       },
-    },
-  });
+    });
+  } catch (error) {
+    throw new Error(`Error creating listing: ${error}`);
+  }
 };
