@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+import { useQuery } from "@apollo/client";
 import ListingImageGallery from "@/components/imageGallery/ListingImageGallery";
 import { listings } from "@/utils/dummyListings";
 import ListingPrice from "@/components/listingDetails/ListingPrice";

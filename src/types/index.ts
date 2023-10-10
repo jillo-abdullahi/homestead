@@ -16,3 +16,19 @@ export type SearchState = {
   query: string;
   filters: Filters;
 };
+
+export type Listing = {
+  area?: number;
+  bathrooms?: number;
+  bedrooms?: number;
+  createdAt: string;
+  description?: string;
+  id: string;
+  images: string[];
+  location: string;
+  price?: number;
+  title: string;
+  user: {
+    username: string;
+  };
+};

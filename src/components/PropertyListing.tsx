@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
-import { BuildingOffice2Icon, MapPinIcon } from "@heroicons/react/24/outline";
+import { MapPinIcon } from "@heroicons/react/24/outline";
+import { IconPhotoX } from "@tabler/icons-react";
 
 /**
  * component that displays a single property listing
@@ -16,10 +17,10 @@ import { BuildingOffice2Icon, MapPinIcon } from "@heroicons/react/24/outline";
 
 interface PropertyListingProps {
   title: string;
-  location?: string;
+  location: string;
   price?: number;
-  image?: string;
-  id?: string;
+  image: string;
+  id: string;
   bedrooms?: number;
   bathrooms?: number;
   area?: number;
@@ -31,11 +32,11 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
   price,
   image,
   id,
-  bedrooms,
-  bathrooms,
-  area,
 }) => {
   const router = useRouter();
+
+  console.log({ title, location, price, image, id });
+  
   // view full listing details
   const handleViewListing = () => {
     if (id) {
@@ -47,19 +48,25 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
       onClick={handleViewListing}
       className="flex flex-col items-center justify-between h-[12rem] rounded-lg bg-white border border-gray-200 p-2 transition-all duration-150 hover:border-2 hover:border-violet-700"
     >
-      <div
-        className="rounded-md w-full h-1/2"
-        style={{
-          background: `url('${image}') no-repeat center center`,
-          backgroundSize: "cover",
-        }}
-      ></div>
+      {image ? (
+        <div
+          className="rounded-md w-full h-1/2"
+          style={{
+            background: `url('${image}') no-repeat center center`,
+            backgroundSize: "cover",
+          }}
+        ></div>
+      ) : (
+        <div className="rounded-md w-full h-1/2 bg-gray-100 flex items-center justify-center">
+          <IconPhotoX size={20} className="text-gray-500" />
+        </div>
+      )}
       <div className="space-y-1 w-full h-[4.5rem] text-left">
         <div className="text-gray-700 text-xs font-medium text-left line-clamp-2 h-8">
           {title}
         </div>
         <div className="text-violet-700 font-bold text-sm line-clamp-1">
-          ${price?.toLocaleString()}
+          ${price ? price?.toLocaleString() : " -"}
         </div>
         <div className="text-gray-500 text-xs font-medium flex items-center justify-start space-x-1 mb-1">
           <MapPinIcon className="w-3 h-3" aria-hidden="true" />

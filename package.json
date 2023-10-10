@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@apollo/client": "^3.8.5",
     "@apollo/server": "^4.9.4",
     "@as-integrations/next": "^2.0.2",
     "@headlessui/react": "^1.7.17",

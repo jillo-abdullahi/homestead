@@ -1,3 +1,5 @@
+import { ApolloProvider } from "@apollo/client";
+import createApolloClient from "../apollo-client";
 import { Exo } from "next/font/google";
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
@@ -6,10 +8,13 @@ import type { AppProps } from "next/app";
 const exo = Exo({ subsets: ["latin"] });
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const client = createApolloClient();
   return (
-    <main className={exo.className}>
-      <Component {...pageProps} />
-    </main>
+    <ApolloProvider client={client}>
+      <main className={exo.className}>
+        <Component {...pageProps} />
+      </main>
+    </ApolloProvider>
   );
 }
 
