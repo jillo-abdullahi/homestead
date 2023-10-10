@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "copy-templates": "cpx \"src/mail/templates/**/*\" dist/mail/templates/",
     "compile": "tsc",
     "start": "npm run compile && node ./dist/index.js",
-    "start:dev": "tsc-watch --onSuccess \"nodemon ./dist/index.js\""
+    "start:dev": "tsc-watch --onSuccess \"nodemon ./dist/index.js\"",
+    "build": "npm run compile && npx prisma migrate deploy && npx prisma generate"
   },
   "keywords": [],
   "author": "",
