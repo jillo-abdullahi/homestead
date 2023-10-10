@@ -4,7 +4,9 @@ import dotenv from "dotenv";
 import { getUserFromToken } from "./utils/index.js";
 import { schema } from "./schema/index.js";
 
-dotenv.config();
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config();
+}
 
 const server = new ApolloServer({
   schema,
