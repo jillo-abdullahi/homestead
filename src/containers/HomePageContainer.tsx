@@ -31,7 +31,7 @@ const HomePageContainer = () => {
       </>
 
       <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {data?.listings.length &&
+        {data?.listings.length > 0 &&
           data?.listings.map((listing: Listing) => {
             const {
               id,
