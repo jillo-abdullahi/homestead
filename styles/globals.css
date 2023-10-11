@@ -66,8 +66,3 @@ a {
   border: 2px solid #743bde !important;
 }
 
-.glass {
-  background: rgba(255, 255, 255, 0.5);
-  -webkit-backdrop-filter: blur(3px);
-  backdrop-filter: blur(3px);
-}

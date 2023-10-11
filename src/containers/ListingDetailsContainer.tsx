@@ -1,86 +1,85 @@
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { IconPhoto, IconPhotoX } from "@tabler/icons-react";
 import { useQuery } from "@apollo/client";
+import moment from "moment";
 import ListingImageGallery from "@/components/imageGallery/ListingImageGallery";
-import { listings } from "@/utils/dummyListings";
 import ListingPrice from "@/components/listingDetails/ListingPrice";
 import ListingSpecs from "@/components/listingDetails/ListingSpecs";
 import ListingTitle from "@/components/listingDetails/ListingTitle";
+import { GET_LISTING } from "@/graph/queries";
+import { ListingDetailsEmptyState } from "@/components/listingDetails/ListingDetailsEmptyState";
 
 /**
  * listing details component.
  * shows full details of a listing on a dedicated page
+ * listing id is passed as a query param
  * @returns
  */
-
-interface Listing {
-  id: string;
-  title: string;
-  location: string;
-  price: number;
-  bedrooms: number;
-  bathrooms: number;
-  area?: number;
-  images: Array<{ original: string; thumbnail: string }>;
-}
 
 const ListingDetailsContainer: React.FC = () => {
   const router = useRouter();
   const { listingId } = router.query;
 
-  const [currentListing, setCurrentListing] = useState<Listing | null>(null);
+  const { data, loading, error } = useQuery(GET_LISTING, {
+    variables: { listingId },
+    skip: !listingId,
+  });
 
-  useEffect(() => {
-    // TODO: fetch listing details from server
-    // TODO: add empty, loading, and error states
-    if (listingId) {
-      const currentListing = listings.find(
-        (listing) => listing.id === listingId
-      );
-      if (currentListing) {
-        setCurrentListing(currentListing);
-      }
-    }
-  }, [listingId]);
+  const listing = data?.listing;
 
-  // TODO: fetch listing details from server
-  const { title, location, price, id, bedrooms, bathrooms, area, images } =
-    currentListing ?? {};
+  console.log({ error });
+
+  if (error || loading)
+    return <ListingDetailsEmptyState error={error ? true : false} />;
 
   return (
-    <div>
-      <div className="flex flex-col items-center justify-center md:grid md:grid-cols-12 gap-6 mt-10">
+    <div className="flex flex-col items-center justify-center md:grid md:grid-cols-12 gap-6 mt-10 sm:mt-28">
+      {
         <div className="w-full md:col-span-6">
           {/* image carousel */}
-          {currentListing && (
-            <ListingImageGallery images={currentListing.images} />
+
+          {listing?.images?.length === 0 && (
+            <div className="w-full min-h-[20rem] min-h-md flex items-center justify-center bg-gray-200 rounded-lg">
+              <IconPhotoX size={32} className="text-gray-400" />
+            </div>
+          )}
+
+          {listing?.images && listing?.images?.length > 0 && (
+            <ListingImageGallery images={listing?.images ?? []} />
           )}
         </div>
-        <div className="w-full h-full md:col-span-6 space-y-4 flex flex-col items-start justify-center">
-          {/* title and location  */}
-          <ListingTitle title={title ?? ""} location={location ?? ""} />
-
-          {/* listing description  */}
-          <div className="text-gray-700">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia
-            voluptatem, voluptatum quibusdam. Lorem ipsum dolor sit amet
-            consectetur adipisicing elit. Quia voluptatem, voluptatum quibusdam.
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia
-          </div>
-
-          {/* listing specs  */}
-          <ListingSpecs
-            bedrooms={bedrooms ?? 0}
-            bathrooms={bathrooms ?? 0}
-            area={area ?? 0}
+      }
+      <div className="w-full h-full md:col-span-6 space-y-4 flex flex-col items-start justify-center">
+        {/* title and location  */}
+        {listing?.title && (
+          <ListingTitle
+            title={listing?.title ?? ""}
+            location={listing?.location ?? ""}
           />
+        )}
 
-          {/* date added  */}
-          <div className="text-violet-500 text-sm">Added 2 weeks ago.</div>
+        {/* listing description  */}
+        {listing?.description && (
+          <div className="text-gray-700">{listing?.description}</div>
+        )}
 
-          {/* price  */}
-          {<ListingPrice price={price ?? 0} />}
-        </div>
+        {/* listing specs  */}
+
+        <ListingSpecs
+          bedrooms={listing?.bedrooms ?? "-"}
+          bathrooms={listing?.bathrooms ?? "-"}
+          area={listing?.area ?? "-"}
+        />
+
+        {/* date added  */}
+        {listing?.createdAt && (
+          <div className="text-violet-500 text-sm">
+            Listed {moment(listing?.createdAt).fromNow()}
+          </div>
+        )}
+
+        {/* price  */}
+        <ListingPrice price={listing?.price ?? "-"} />
       </div>
     </div>
   );

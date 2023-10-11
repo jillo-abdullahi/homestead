@@ -8,9 +8,9 @@ import Image from "next/image";
  * @returns
  */
 interface ListingSpecsProps {
-  bedrooms: number;
-  bathrooms: number;
-  area: number;
+  bedrooms: number | string;
+  bathrooms: number | string;
+  area: number | string;
 }
 
 const ListingSpecs: React.FC<ListingSpecsProps> = ({

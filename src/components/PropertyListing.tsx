@@ -35,8 +35,6 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
 }) => {
   const router = useRouter();
 
-  console.log({ title, location, price, image, id });
-  
   // view full listing details
   const handleViewListing = () => {
     if (id) {
