@@ -3,6 +3,10 @@ import { User } from "@prisma/client";
 import { JwtPayload } from "jsonwebtoken";
 import prisma from "./prisma";
 
+export enum TokenError {
+  CAN_NOT_SIGN = "Cannot sign token",
+}
+
 /**
  * check if env secret is set
  * @param data
@@ -30,7 +34,7 @@ export const signToken = (data: {
       expiresIn: "7d",
     });
   } catch (error) {
-    throw new Error(`Error signing token: ${error}`);
+    throw new Error(TokenError.CAN_NOT_SIGN);
   }
 };
 
@@ -44,22 +48,7 @@ export const verifyToken = (token: string) => {
   try {
     return jwt.verify(token, process.env.JWT_SECRET!);
   } catch (error) {
-    throw new Error(`Error verifying token: ${error}`);
-  }
-};
-
-/**
- * decode jwt token
- * @param token - jwt token
- * @returns decoded jwt token or error
- */
-
-export const decodeToken = (token: string) => {
-  checkEnv(process.env.JWT_SECRET!);
-  try {
-    return jwt.decode(token);
-  } catch (error) {
-    throw new Error(`Error decoding token: ${error}`);
+    return false;
   }
 };
 
@@ -74,10 +63,7 @@ export const getUserFromToken = async (token: string) => {
   }
 
   // check token validity
-  verifyToken(token);
-
-  // decoding token
-  const user = decodeToken(token);
+  const user = verifyToken(token);
 
   if (user) {
     const { id } = user as JwtPayload;

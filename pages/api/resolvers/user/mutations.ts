@@ -1,6 +1,6 @@
 import { User } from "@prisma/client";
 import prisma from "../../utils/prisma";
-import { signToken } from "../../utils/jwt";
+import { signToken, verifyToken } from "../../utils/jwt";
 import { hashPassword, verifyPassword } from "../../utils/hashPassword";
 import sendMail from "../../mail";
 
@@ -115,7 +115,7 @@ export const loginUser = async (args: { email: string; password: string }) => {
 };
 
 /**
- * resolver function to reset user password
+ * resolver function to send password reset email
  * @param args - email
  * @returns - user info after sending reset password email
  */
@@ -132,11 +132,62 @@ export const resetPassword = async (args: { email: string }) => {
   }
 
   // generate token and url to reset user password
-  const resetToken = await signToken({
-    id: user.id,
-    email: user.email,
-    confirmed: user.confirmed,
-  });
+  let resetToken;
+
+  const signJWTToken = () => {
+    return signToken({
+      id: user.id,
+      email: user.email,
+      confirmed: user.confirmed,
+    });
+  };
+
+  // save the reset token to db
+  try {
+    // check if user already has a reset token
+    const existingResetToken = await prisma.passwordResetToken.findUnique({
+      where: {
+        userId: user.id,
+      },
+    });
+
+    if (existingResetToken) {
+      // validate token
+      const tokenDetails = verifyToken(existingResetToken.token);
+
+      // token is invalid
+      if (!tokenDetails) {
+        // generate new token and update record
+        resetToken = signJWTToken();
+        await prisma.passwordResetToken.update({
+          where: {
+            userId: user.id,
+          },
+          data: {
+            token: resetToken,
+          },
+        });
+      } else {
+        // resend existing token since it is still valid
+        resetToken = existingResetToken.token;
+      }
+    } else {
+      resetToken = signJWTToken();
+      await prisma.passwordResetToken.create({
+        data: {
+          token: resetToken,
+          user: {
+            connect: {
+              id: user.id,
+            },
+          },
+        },
+      });
+    }
+  } catch (error) {
+    throw new Error("Error generating reset token");
+  }
+
   const url = `${process.env.CLIENT_BASE_URL}/auth/reset-password?token=${resetToken}`;
 
   // send reset password email
@@ -173,6 +224,17 @@ export const updatePassword = async (
   }
   const { email } = user;
 
+  // delete password reset token
+  try {
+    await prisma.passwordResetToken.delete({
+      where: {
+        userId: user.id,
+      },
+    });
+  } catch (error) {
+    throw new Error("Error deleting password reset token");
+  }
+
   // update user password
   try {
     return await prisma.user.update({
@@ -184,6 +246,6 @@ export const updatePassword = async (
       },
     });
   } catch (error) {
-    throw new Error(`Error updating password: ${error}`);
+    throw new Error("Error updating password");
   }
 };

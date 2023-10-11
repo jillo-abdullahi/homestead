@@ -28,7 +28,7 @@ const ResetPasswordContainer = () => {
   }>({
     password: "",
     confirmPassword: "",
-    unknownError: "Some unknown error occurred.",
+    unknownError: "",
   });
 
   const router = useRouter();
@@ -54,16 +54,6 @@ const ResetPasswordContainer = () => {
       password: "",
       confirmPassword: "",
       unknownError: "",
-    }));
-  };
-
-  // clear form fields
-  const clearFormFields = () => {
-    setResetDetails((prevState) => ({
-      ...prevState,
-      password: "",
-      confirmPassword: "",
-      success: false,
     }));
   };
 
