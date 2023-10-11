@@ -6,8 +6,15 @@ import SelectedImage from "@/components/imageUploader/SelectedImage";
  * @returns
  */
 
-const ImageUploader: React.FC = () => {
-  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+interface ImageUploaderProps {
+  selectedImages: File[];
+  setSelectedImages: React.Dispatch<React.SetStateAction<File[]>>;
+}
+
+const ImageUploader: React.FC<ImageUploaderProps> = ({
+  selectedImages,
+  setSelectedImages,
+}) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   // handle file upload
   const handleFilesUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

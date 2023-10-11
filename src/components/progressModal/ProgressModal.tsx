@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import { useRouter } from "next/router";
 import Image from "next/image";
 import { Exo } from "next/font/google";
 import { Dialog, Transition } from "@headlessui/react";
@@ -13,6 +14,7 @@ import PrimaryButton from "@/components/buttons/PrimaryButton";
  * @param {string} loadingText - text to show when operation is in progress
  * @param {string} successText - text to show when operation is successful
  * @param {string} errorText - text to show when operation fails
+ * @param {string} listingId - id of the created listing
  * @returns
  */
 
@@ -28,7 +30,8 @@ interface ProgressModalProps {
   errorText?: string;
   onClose: () => void;
   open: boolean;
-  progressStatus?: ProgressStatus;
+  progressStatus?: ProgressStatus | null;
+  listingId?: string;
 }
 
 const ProgressModal: React.FC<ProgressModalProps> = ({
@@ -39,7 +42,13 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
   loadingText,
   successText,
   errorText,
+  listingId,
 }) => {
+  const router = useRouter();
+  // open listing page upon successful listing creation
+  const viewListing = () => {
+    if (listingId) router.push(`/listing/${listingId}`);
+  };
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog
@@ -114,9 +123,7 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
                           {successText}
                         </div>
                         <div>
-                          <PrimaryButton
-                            onClick={() => console.log("GOING TO LISTING PAGE")}
-                          >
+                          <PrimaryButton onClick={viewListing}>
                             <span>View listing</span>
                           </PrimaryButton>
                         </div>

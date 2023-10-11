@@ -27,7 +27,6 @@ const ListingDetailsContainer: React.FC = () => {
 
   const listing = data?.listing;
 
-  console.log({ error });
 
   if (error || loading)
     return <ListingDetailsEmptyState error={error ? true : false} />;

@@ -1,5 +1,6 @@
-import { useState, useCallback } from "react";
-import Navbar from "@/components/navbar/Navbar";
+import { useState, useCallback, useEffect } from "react";
+import { useMutation } from "@apollo/client";
+import { CREATE_LISTING } from "@/graph/mutations";
 import ProgressModal from "@/components/progressModal/ProgressModal";
 import { ProgressStatus } from "@/components/progressModal/types";
 import CreateListingForm from "@/components/createListing/CreateListingForm";
@@ -15,6 +16,7 @@ const CreateListingContainer: React.FC = () => {
     price: "",
     bedrooms: "",
     bathrooms: "",
+    description: "",
     area: "",
   });
 
@@ -24,9 +26,36 @@ const CreateListingContainer: React.FC = () => {
     price: "",
     bedrooms: "",
     bathrooms: "",
+    description: "",
     area: "",
   });
   const [openProgressModal, setOpenProgressModal] = useState(false);
+  const [progressStatus, setProgressStatus] = useState<ProgressStatus | null>(
+    null
+  );
+
+  const [token, setToken] = useState("token");
+
+  // image states
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+
+  // get token from local storage
+  useEffect(() => {
+    const user = localStorage.getItem("homesteaduser");
+    if (user) {
+      const { token } = JSON.parse(user);
+      setToken(token);
+    }
+  }, []);
+
+  // mutation to create listing
+  const [createListing, { data }] = useMutation(CREATE_LISTING, {
+    context: {
+      headers: {
+        authorization: token,
+      },
+    },
+  });
 
   const closeProgressModal = () => {
     //clear form states
@@ -36,10 +65,48 @@ const CreateListingContainer: React.FC = () => {
       price: "",
       bedrooms: "",
       bathrooms: "",
+      description: "",
       area: "",
     });
 
     setOpenProgressModal(false);
+  };
+
+  // handle image uploads
+  const handleImageUpload = async () => {
+    setProgressStatus(ProgressStatus.InProgress);
+    const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUD_NAME!;
+    const UPLOAD_PRESET = process.env.NEXT_PUBLIC_UPLOAD_PRESET!;
+    const UPLOAD_FOLDER = process.env.NEXT_PUBLIC_CLOUDINARY_IMAGE_FOLDER!;
+
+    const uploadPromises = selectedImages.map(async (file) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", UPLOAD_PRESET);
+      formData.append("folder", UPLOAD_FOLDER);
+
+      try {
+        const response = await fetch(
+          `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        return response.json(); // Or handle response as needed
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        return null; // Or handle error differently
+      }
+    });
+
+    const results = await Promise.all(uploadPromises);
+    return results; // This will be an array of responses
   };
 
   // send to server
@@ -48,16 +115,58 @@ const CreateListingContainer: React.FC = () => {
 
     // open progress modal
     setOpenProgressModal(true);
+
+    // upload images first
+    handleImageUpload()
+      .then((results) => {
+        // extract image urls from results
+        const images = results.map((result) => result.secure_url);
+
+        // create listing
+        const {
+          bedrooms,
+          bathrooms,
+          area,
+          description,
+          location,
+          price,
+          title,
+        } = newListingDetails;
+        createListing({
+          variables: {
+            location,
+            price: Number(price),
+            title,
+            description: description || null,
+            bedrooms: Number(bedrooms) || null,
+            bathrooms: Number(bathrooms) || null,
+            area: Number(area),
+            images,
+          },
+          onCompleted: (data) => {
+            setProgressStatus(ProgressStatus.Completed);
+          },
+          onError: (error) => {
+            setProgressStatus(ProgressStatus.Error);
+          },
+        });
+      })
+      .catch((error) => {
+        console.log({ "IMAGE UPLOADS FAILED": error });
+      });
   };
 
   // handle input changes
   const handleChanges = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target;
-      setNewListingDetails((prevState) => ({ ...prevState, [name]: value }));
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      if ("value" in e.target) {
+        const { name, value } = e.target;
+        setNewListingDetails((prevState) => ({ ...prevState, [name]: value }));
+      }
     },
     []
   );
+
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center">
       <div className="mt-10 sm:mx-auto sm:w-full rounded-lg bg-white p-10">
@@ -75,6 +184,8 @@ const CreateListingContainer: React.FC = () => {
           handleChanges={handleChanges}
           newListingDetails={newListingDetails}
           formErrors={formErrors}
+          selectedImages={selectedImages}
+          setSelectedImages={setSelectedImages}
         />
       </div>
       {/* creation progress modal  */}
@@ -85,7 +196,8 @@ const CreateListingContainer: React.FC = () => {
         loadingText="Creating listing..."
         successText="Listing created successfully!"
         errorText="An error occurred while creating the listing."
-        progressStatus={ProgressStatus.Error}
+        progressStatus={progressStatus}
+        listingId={data?.createListing.id}
       />
     </div>
   );

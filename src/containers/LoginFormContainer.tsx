@@ -60,11 +60,11 @@ const LoginFormContainer = () => {
       },
       onError: (error) => {
         const { message } = error;
-        if (message.includes("credentials")) {
+        if (message.includes("credentials") || message.includes("not found")) {
           setFormErrors((prevState) => ({
             ...prevState,
-            email: message,
-            password: message,
+            email: "Invalid credentials",
+            password: "Invalid credentials",
           }));
           return;
         } else {

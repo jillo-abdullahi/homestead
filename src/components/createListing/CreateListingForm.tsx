@@ -21,9 +21,11 @@ import { NewListing } from "@/components/createListing/types";
 
 interface CreateListingFormProps {
   handleSubmitListing: (e: React.FormEvent<HTMLFormElement>) => void;
-  handleChanges: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChanges: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   newListingDetails: NewListing;
   formErrors: NewListing;
+  selectedImages: File[];
+  setSelectedImages: React.Dispatch<React.SetStateAction<File[]>>;
 }
 
 const CreateListingForm: React.FC<CreateListingFormProps> = ({
@@ -31,13 +33,18 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
   handleChanges,
   newListingDetails,
   formErrors,
+  selectedImages,
+  setSelectedImages,
 }) => {
   return (
     <form className="mt-6" onSubmit={handleSubmitListing}>
       <div className="flex flex-col items-center justify-center md:grid md:grid-cols-12 gap-6 ">
         {/* listing images  */}
         <div className="md:col-span-6 w-full border border-gray-200 rounded-lg h-full">
-          <ImageUploader />
+          <ImageUploader
+            selectedImages={selectedImages}
+            setSelectedImages={setSelectedImages}
+          />
         </div>
 
         {/* other listing details  */}
@@ -69,6 +76,8 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
                 id="description"
                 className="block w-full rounded-md border-0 py-2 text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-violet-700 sm:text-sm sm:leading-6"
                 placeholder="e.g. This is a beautiful 3 bedroom apartment in the heart of New York City."
+                value={newListingDetails.description}
+                onChange={handleChanges}
               />
             </div>
           </div>

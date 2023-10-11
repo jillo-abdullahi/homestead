@@ -70,3 +70,31 @@ export const RESEND_CONFIRMATION_EMAIL = gql`
     }
   }
 `;
+
+// create listing
+export const CREATE_LISTING = gql`
+  mutation CreateListing(
+    $images: [String!]!
+    $location: String!
+    $price: Float!
+    $title: String!
+    $description: String
+    $bedrooms: Int
+    $bathrooms: Int
+    $area: Int
+  ) {
+    createListing(
+      images: $images
+      location: $location
+      price: $price
+      title: $title
+      description: $description
+      bedrooms: $bedrooms
+      bathrooms: $bathrooms
+      area: $area
+    ) {
+      title
+      id
+    }
+  }
+`;

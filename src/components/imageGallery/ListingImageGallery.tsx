@@ -11,15 +11,20 @@ import FullScreenButton from "@/components/imageGallery/FullscreenButton";
  */
 
 interface ListingImageGalleryProps {
-  images: Array<{ original: string; thumbnail: string }>;
+  images: string[];
 }
 
 const ListingImageGallery: React.FC<ListingImageGalleryProps> = ({
   images,
 }) => {
+
+  const imagesWithThumbnails = images.map((image) => ({
+    original: image,
+    thumbnail: image,
+  }));
   return (
     <ImageGallery
-      items={images}
+      items={imagesWithThumbnails}
       showPlayButton={false}
       renderLeftNav={(onClick, disabled) => (
         <NavButton onClick={onClick} disabled={disabled} />

@@ -5,4 +5,5 @@ export interface NewListing {
   bedrooms: string;
   bathrooms: string;
   area: string;
+  description: string;
 }
