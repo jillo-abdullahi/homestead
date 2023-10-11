@@ -6,7 +6,7 @@ const CreateListing: NextPage = () => {
   return (
     <main className="bg-gray-100 flex flex-col">
       <div className="flex-grow container">
-        <Navbar isLoggedin={true} isOnCreateListingPage={true} />
+        <Navbar isOnCreateListingPage={true} />
         <CreateListingContainer />
       </div>
     </main>

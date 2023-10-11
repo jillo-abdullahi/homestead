@@ -8,7 +8,7 @@ const SearchListings: NextPage = () => {
     <main>
       <div className="min-h-screen flex flex-col">
         <div className="flex-grow container">
-          <Navbar isLoggedin={false} />
+          <Navbar />
           <SearchListingsContainer />
         </div>
         <Footer />

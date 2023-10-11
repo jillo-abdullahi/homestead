@@ -5,6 +5,7 @@ import {
   ChevronDownIcon,
   ArrowRightOnRectangleIcon,
 } from "@heroicons/react/20/solid";
+import { removeLoggedInUser } from "@/utils/saveLoggedInUser";
 /**
  * avatar component to show logged in user.
  * @prop {string} userEmail - email of the logged in user
@@ -65,7 +66,8 @@ const Avatar: React.FC<AvatarProps> = ({ userEmail, username }) => {
             <Menu.Item>
               {({ active }) => (
                 <button
-                  type="submit"
+                  type="button"
+                  onClick={removeLoggedInUser}
                   className={classNames(
                     active ? "bg-violet-200 text-gray-900" : "text-gray-700",
                     "flex items-center w-full px-4 py-2 text-left text-sm"

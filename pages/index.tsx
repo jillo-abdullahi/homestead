@@ -15,7 +15,7 @@ const Home: NextPage = () => {
 
       <main className="flex flex-col min-h-screen">
         <div className="flex-grow container">
-          <Navbar isLoggedin={true} />
+          <Navbar />
           <HomePageContainer />
         </div>
         <Footer />

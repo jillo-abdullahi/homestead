@@ -1,8 +1,13 @@
 import { useState } from "react";
+import { useMutation } from "@apollo/client";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { EnvelopeIcon, LockClosedIcon } from "@heroicons/react/24/outline";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import InputFieldWithIcon from "@/components/inputFields/InputFieldWithIcon";
+import { LOGIN_USER } from "@/graph/mutations";
+import FormUnknownError from "@/components/errorStates/FormUnknownError";
+import { saveLoggedInUser } from "@/utils/saveLoggedInUser";
 
 /**
  * Login form component.
@@ -17,23 +22,62 @@ const LoginFormContainer = () => {
   const [formErrors, setFormErrors] = useState({
     email: "",
     password: "",
+    unknownError: "",
   });
+
+  // mutation to login user
+  const [loginUser, { loading }] = useMutation(LOGIN_USER);
+  const router = useRouter();
 
   const handleChanges = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    clearFormErrors();
     setLoginDetails((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  const clearFormErrors = () => {
+    setFormErrors((prevState) => ({
+      ...prevState,
+      password: "",
+      email: "",
+      unknownError: "",
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: check if credentials are valid
-    // update error state accordingly after API call
+    const { email, password } = loginDetails;
 
-    console.log(loginDetails);
+    loginUser({
+      variables: {
+        email,
+        password,
+      },
+      onCompleted: (data) => {
+        saveLoggedInUser(data.loginUser);
+        router.push("/");
+      },
+      onError: (error) => {
+        const { message } = error;
+        if (message.includes("credentials")) {
+          setFormErrors((prevState) => ({
+            ...prevState,
+            email: message,
+            password: message,
+          }));
+          return;
+        } else {
+          setFormErrors((prevState) => ({
+            ...prevState,
+            unknownError: "An unknown error occurred",
+          }));
+        }
+      },
+    });
   };
 
   return (
-    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+    <div className="relative flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm text-center">
         <span className="font-bold text-xl text-gray-800 hover:text-gray-700 transition-all duration-100">
           Homestead
@@ -41,7 +85,11 @@ const LoginFormContainer = () => {
         </span>
       </div>
 
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-md rounded-lg bg-white p-10">
+      <div
+        className={`mt-10 sm:mx-auto sm:w-full sm:max-w-md rounded-lg bg-white p-10 ${
+          formErrors.unknownError ? "blur-sm" : ""
+        }`}
+      >
         <h2 className="mt-6 text-left text-2xl font-bold leading-9 tracking-tight text-gray-700">
           Sign in to your account
         </h2>
@@ -61,6 +109,7 @@ const LoginFormContainer = () => {
               value={loginDetails.email}
               label="Email address"
               isRequired={true}
+              error={formErrors.email}
             />
           </div>
 
@@ -76,6 +125,7 @@ const LoginFormContainer = () => {
               label="Password"
               isLoginForm={true}
               isRequired={true}
+              error={formErrors.password}
             />
           </div>
 
@@ -96,6 +146,13 @@ const LoginFormContainer = () => {
           </Link>
         </p>
       </div>
+      {/* in case of an unknown error  */}
+      {formErrors.unknownError && (
+        <FormUnknownError
+          error={formErrors.unknownError}
+          clearFormErrors={clearFormErrors}
+        />
+      )}
     </div>
   );
 };

@@ -12,7 +12,8 @@ import PrimaryButton from "@/components/buttons/PrimaryButton";
 import InputFieldWithIcon from "@/components/inputFields/InputFieldWithIcon";
 import isValidPassword from "@/utils/isValidPassword";
 import { CREATE_USER } from "@/graph/mutations";
-import SecondaryButton from "@/components/buttons/SecondaryButton";
+import FormUnknownError from "@/components/errorStates/FormUnknownError";
+import { saveLoggedInUser } from "@/utils/saveLoggedInUser";
 
 /**
  * sign up form component to register a new user.
@@ -114,7 +115,7 @@ const SignupFormContainer = () => {
         password,
       },
       onCompleted: (data) => {
-        localStorage.setItem("homesteaduser", JSON.stringify(data.createUser));
+        saveLoggedInUser(data.createUser);
         router.push("/");
       },
       onError: (error) => {
@@ -245,18 +246,10 @@ const SignupFormContainer = () => {
 
       {/* in case of an unknown error  */}
       {formErrors.unknownError && (
-        <div className="absolute z-20 w-full h-full flex items-center justify-center">
-          <div className="text-center flex flex-col items-center justify-center space-y-2">
-            <Image src="/error.svg" width={150} height={150} alt="error" />
-            <span className="text-gray-800 font-medium">
-              {formErrors.unknownError}
-              <br /> Please click the button below to try again.
-            </span>
-            <SecondaryButton onClick={clearFormErrors}>
-              Try again
-            </SecondaryButton>
-          </div>
-        </div>
+        <FormUnknownError
+          clearFormErrors={clearFormErrors}
+          error={formErrors.unknownError}
+        />
       )}
     </div>
   );

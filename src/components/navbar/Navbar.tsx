@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { UserCircleIcon, PlusCircleIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -7,20 +8,19 @@ import Avatar from "@/components/navbar/Avatar";
 
 /**
  * Main nav component with links to other pages
- * @prop {boolean} isLoggedin - whether user is logged in or not
  * @prop {boolean} isOnCreateListingPage - whether user is on create listing page or not
  * @returns
  */
 
 interface NavbarProps {
-  isLoggedin?: boolean;
   isOnCreateListingPage?: boolean;
 }
 
-const Navbar: React.FC<NavbarProps> = ({
-  isLoggedin = false,
-  isOnCreateListingPage = false,
-}) => {
+const Navbar: React.FC<NavbarProps> = ({ isOnCreateListingPage = false }) => {
+  const [user, setUser] = useState({
+    username: "",
+    email: "",
+  });
   const router = useRouter();
 
   // navigate to sign up page
@@ -32,6 +32,17 @@ const Navbar: React.FC<NavbarProps> = ({
   const handleCreateListing = () => {
     router.push("/create-listing");
   };
+
+  // check if user is logged in
+  useEffect(() => {
+    const user = localStorage.getItem("homesteaduser");
+    if (user) {
+      const { username, email } = JSON.parse(user);
+      setUser({ username, email });
+    }
+  }, []);
+
+  const isLoggedin = user.email !== "";
 
   return (
     <div className="w-full py-6 flex items-center justify-between">
@@ -61,10 +72,7 @@ const Navbar: React.FC<NavbarProps> = ({
                 </div>
               </SecondaryButton>
             )}
-            <Avatar
-              userEmail="jayloabdullahi@gmail.com"
-              username="shrewdTurtle"
-            />
+            <Avatar userEmail={user.email} username={user.username} />
           </div>
         )}
         {!isLoggedin && (
