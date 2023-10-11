@@ -2,7 +2,6 @@ import { useQuery } from "@apollo/client";
 import Landing from "@/components/Landing";
 import ListingsEmptyState from "@/components/listingDetails/ListingsEmptyState";
 import PropertyListing from "@/components/PropertyListing";
-import { listings } from "@/utils/dummyListings";
 import { ListingLoadingState } from "@/components/listingDetails/ListingLoadingState";
 import { GET_ALL_LISTINGS } from "@/graph/queries";
 import { Listing } from "@/types";
@@ -14,9 +13,7 @@ const HomePageContainer = () => {
   // fetch listings
   const { data, loading, error } = useQuery(GET_ALL_LISTINGS);
 
-  // console.log({ data, loading, error });
 
-  // console.log("LISTINGS", data?.listings)
 
   return (
     <div className="w-full">

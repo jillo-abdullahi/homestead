@@ -8,8 +8,8 @@ import DropdownButton from "@/components/buttons/DropdownButton";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import SearchResults from "@/components/searchListings/SearchResults";
-import { listings } from "@/utils/dummyListings";
 import { SearchState } from "@/types";
+import { Listing } from "@prisma/client";
 
 /**
  * container component to show search form for listings
@@ -46,6 +46,9 @@ const SearchListingsContainer: React.FC = () => {
       },
     }));
   };
+
+  //TODO: fetch listings
+  const listings: Listing[] = [];
 
   // handle search query submit
   const handleSearchQuerySubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -149,7 +152,9 @@ const SearchListingsContainer: React.FC = () => {
       </div>
 
       <div className="mt-10">
-        <div className="text-sm font-medium text-violet-700 border rounded-lg p-2 border-gray-100 w-fit">{listings.length} listings found</div>
+        <div className="text-sm font-medium text-violet-700 border rounded-lg p-2 border-gray-100 w-fit">
+          {listings.length} listings found
+        </div>
         <SearchResults searchResults={listings} />
       </div>
     </>

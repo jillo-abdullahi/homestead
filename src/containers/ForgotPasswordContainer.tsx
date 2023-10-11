@@ -16,7 +16,7 @@ const ForgotPasswordContainer: React.FC = () => {
   const [email, setEmail] = useState("");
   const [formErrors, setFormErrors] = useState({
     email: "",
-    unknownError: "An unknown error occurred.",
+    unknownError: "",
   });
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 

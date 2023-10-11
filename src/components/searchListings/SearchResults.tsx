@@ -1,7 +1,7 @@
 import { memo } from "react";
-import { listings } from "@/utils/dummyListings";
 import PropertyListing from "@/components/PropertyListing";
 import ListingsEmptyState from "@/components/listingDetails/ListingsEmptyState";
+import { Listing } from "@prisma/client";
 /**
  * component to display search results
  * @param {any} searchResults - search results
@@ -11,6 +11,9 @@ import ListingsEmptyState from "@/components/listingDetails/ListingsEmptyState";
 interface SearchResultsProps {
   searchResults: any;
 }
+
+// TODO: fetch listings
+const listings: Listing[] = [];
 
 const SearchResults: React.FC<SearchResultsProps> = ({ searchResults }) => {
   return (
@@ -34,11 +37,11 @@ const SearchResults: React.FC<SearchResultsProps> = ({ searchResults }) => {
                   title={title}
                   location={location}
                   price={price}
-                  image={images[0].original}
+                  image={images[0]}
                   id={id}
-                  bedrooms={bedrooms}
-                  bathrooms={bathrooms}
-                  area={area}
+                  bedrooms={bedrooms ?? 0}
+                  bathrooms={bathrooms ?? 0}
+                  area={area ?? 0}
                 />
               )
             )}
