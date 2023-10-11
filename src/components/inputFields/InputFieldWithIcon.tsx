@@ -1,4 +1,5 @@
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
 import { useState } from "react";
 /**
  * input field with icon on the left
@@ -68,12 +69,12 @@ const InputFieldWithIcon: React.FC<InputFieldWithIconProps> = ({
         </label>
         {type === "password" && isLoginForm && (
           <div className="text-sm">
-            <a
-              href="#"
+            <Link
+              href="/auth/forgot-password"
               className="font-semibold text-violet-700 hover:text-violet-600"
             >
               Forgot password?
-            </a>
+            </Link>
           </div>
         )}
       </div>

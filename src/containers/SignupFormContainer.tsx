@@ -236,7 +236,7 @@ const SignupFormContainer = () => {
         <p className="mt-8 text-center text-sm text-gray-500">
           Already a member?{" "}
           <Link
-            href="/login"
+            href="/auth/login"
             className="font-semibold leading-6 text-violet-700 hover:text-violet-600"
           >
             Login to your account

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { EnvelopeIcon, LockClosedIcon } from "@heroicons/react/24/outline";
@@ -131,7 +132,18 @@ const LoginFormContainer = () => {
 
           <div className="w-full">
             <PrimaryButton type="submit" fontSize="text-base">
-              <span>Sign in</span>
+              {loading ? (
+                <div className="w-full flex justify-center items-center py-1">
+                  <Image
+                    src="/loader.svg"
+                    width={50}
+                    height={50}
+                    alt="spinner"
+                  />
+                </div>
+              ) : (
+                <span>Sign in</span>
+              )}
             </PrimaryButton>
           </div>
         </form>
@@ -139,7 +151,7 @@ const LoginFormContainer = () => {
         <p className="mt-8 text-center text-sm text-gray-500">
           Not a member?{" "}
           <Link
-            href="/signup"
+            href="/auth/signup"
             className="font-semibold leading-6 text-violet-700 hover:text-violet-600"
           >
             Create your account

@@ -1,5 +1,4 @@
 import { NextPage } from "next";
-import Footer from "@/components/Footer";
 import LoginFormContainer from "@/containers/LoginFormContainer";
 
 const Login: NextPage = () => {

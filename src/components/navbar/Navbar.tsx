@@ -25,7 +25,7 @@ const Navbar: React.FC<NavbarProps> = ({ isOnCreateListingPage = false }) => {
 
   // navigate to sign up page
   const handleSignUp = () => {
-    router.push("/signup");
+    router.push("/auth/signup");
   };
 
   // navigate to create listing page

@@ -4,6 +4,7 @@
  * @param {string} url - url to confirm email or reset password
  * @param {string} bodyText - body text of the email
  * @param {string} buttonText - button text of the email
+ * @param {string} followUpText - follow up text of the email
  * @returns
  */
 
@@ -11,7 +12,8 @@ export const HTML_TEMPLATE = (
   username: string,
   url: string,
   bodyText: string,
-  buttonText: string
+  buttonText: string,
+  followUpText?: string
 ) => {
   return `
       <!DOCTYPE html>
@@ -78,7 +80,7 @@ export const HTML_TEMPLATE = (
             </div>
             <div class="footer">
                 <p>
-                If you did not sign up for this account, please ignore this email.
+                ${followUpText}
                 </p>
                 <p>
                 If you have any questions or need assistance, please contact our

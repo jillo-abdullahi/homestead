@@ -27,3 +27,23 @@ export const LOGIN_USER = gql`
     }
   }
 `;
+
+// forgot password
+export const FORGOT_PASSWORD = gql`
+  mutation ResetPassword($email: String!) {
+    resetPassword(email: $email) {
+      email
+      username
+    }
+  }
+`;
+
+// update password
+export const RESET_PASSWORD = gql`
+  mutation UpdatePassword($password: String!) {
+    updatePassword(password: $password) {
+      email
+      id
+    }
+  }
+`;
