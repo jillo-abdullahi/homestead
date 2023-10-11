@@ -47,3 +47,26 @@ export const RESET_PASSWORD = gql`
     }
   }
 `;
+
+// confirm user email
+export const CONFIRM_USER_EMAIL = gql`
+  mutation ConfirmUser {
+    confirmUser {
+      token
+      id
+      email
+      username
+      confirmed
+    }
+  }
+`;
+
+// resend confirmation email
+export const RESEND_CONFIRMATION_EMAIL = gql`
+  mutation ResendUserConfirmation($email: String!) {
+    resendUserConfirmation(email: $email) {
+      email
+      id
+    }
+  }
+`;

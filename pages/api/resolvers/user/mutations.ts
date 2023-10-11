@@ -41,6 +41,19 @@ export const createUser = async (args: {
       email: user.email,
       confirmed: user.confirmed,
     });
+
+    // save confirmation token to db
+    await prisma.confirmationToken.create({
+      data: {
+        token: confirmationToken,
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
+      },
+    });
+
     const url = `${process.env.CLIENT_BASE_URL}/auth/confirm-email?token=${confirmationToken}`;
 
     // send confirmation email
@@ -71,9 +84,17 @@ export const confirmUser = async (user: User) => {
   const { id, confirmed } = user;
 
   if (confirmed) {
-    throw new Error("User already confirmed");
+    return user;
   }
+
   try {
+    // delete confirmation token
+    await prisma.confirmationToken.delete({
+      where: {
+        userId: id,
+      },
+    });
+
     return await prisma.user.update({
       where: {
         id,
@@ -83,7 +104,7 @@ export const confirmUser = async (user: User) => {
       },
     });
   } catch (error) {
-    throw new Error(`Error confirming user: ${error}`);
+    throw new Error("Error confirming user");
   }
 };
 
@@ -248,4 +269,77 @@ export const updatePassword = async (
   } catch (error) {
     throw new Error("Error updating password");
   }
+};
+
+/**
+ * resolver function to resend user confirmation email
+ * args: user email
+ * @param {string} email - email of user
+ */
+export const resendUserConfirmation = async (args: { email: string }) => {
+  const { email } = args;
+  const user = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  if (!user) {
+    throw new Error(`User with email not found`);
+  }
+
+  try {
+    // first check if user already has a confirmation token
+    const existingConfirmationToken = await prisma.confirmationToken.findUnique(
+      {
+        where: {
+          userId: user.id,
+        },
+      }
+    );
+
+    if (existingConfirmationToken?.token) {
+      await prisma.confirmationToken.delete({
+        where: {
+          userId: user.id,
+        },
+      });
+    }
+  } catch (error) {
+    throw new Error("Error deleting confirmation token");
+  }
+
+  // create a new confirmation token
+  const token = signToken({
+    email: user.email,
+    id: user.id,
+    confirmed: user.confirmed,
+  });
+
+  try {
+    await prisma.confirmationToken.create({
+      data: {
+        token,
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
+      },
+    });
+
+    const url = `${process.env.CLIENT_BASE_URL}/auth/confirm-email?token=${token}`;
+
+    // send confirmation email
+    await sendMail({
+      userEmail: email,
+      username: user.username,
+      url,
+      isEmailConfirmation: true,
+    });
+  } catch (error) {
+    throw new Error("Error creating confirmation token");
+  }
+
+  return user;
 };

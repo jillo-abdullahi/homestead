@@ -1,5 +1,4 @@
 // search value and filters for listings search
-
 type Filters = {
   priceRange?: {
     min?: number; // e.g., 100000

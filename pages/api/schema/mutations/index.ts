@@ -6,6 +6,7 @@ import {
   updatePassword,
   confirmUser,
   loginUser,
+  resendUserConfirmation,
 } from "../../resolvers/user/mutations";
 import {
   createListing,
@@ -134,6 +135,20 @@ builder.mutationType({
         }
 
         return await updatePassword({ ...args }, user);
+      },
+    }),
+
+    // resend user confirmation email
+    resendUserConfirmation: t.prismaField({
+      type: "User",
+      description: "Resend confirmation email",
+      args: {
+        email: t.arg.string({ required: true }),
+      },
+      resolve: async (query, root, args, ctx, info) => {
+        const { email } = args;
+
+        return await resendUserConfirmation({ email });
       },
     }),
   }),

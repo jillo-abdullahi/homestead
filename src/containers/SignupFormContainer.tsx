@@ -116,7 +116,7 @@ const SignupFormContainer = () => {
       },
       onCompleted: (data) => {
         saveLoggedInUser(data.createUser);
-        router.push("/");
+        router.push("/auth/confirm-email");
       },
       onError: (error) => {
         const { message } = error;

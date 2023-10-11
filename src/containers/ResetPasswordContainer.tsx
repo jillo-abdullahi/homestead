@@ -36,8 +36,6 @@ const ResetPasswordContainer = () => {
   // get token from router query
   const { token } = router.query;
 
-  console.log({ token });
-
   // mutation to create user
   const [resetPassword, { loading }] = useMutation(RESET_PASSWORD, {
     context: {

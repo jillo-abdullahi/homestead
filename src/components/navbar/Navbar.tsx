@@ -78,7 +78,7 @@ const Navbar: React.FC<NavbarProps> = ({ isOnCreateListingPage = false }) => {
         {!isLoggedin && (
           <div className="flex items-center space-x-6">
             <Link
-              href="/login"
+              href="/auth/login"
               className="flex items-center justify-start font-medium text-gray-700 hover:text-violet-700"
             >
               <span>Login</span>
