@@ -1,13 +1,18 @@
 import { useState } from "react";
+import Image from "next/image";
+import { useRouter } from "next/router";
 import {
   EnvelopeIcon,
   LockClosedIcon,
   AtSymbolIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { useMutation } from "@apollo/client";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import InputFieldWithIcon from "@/components/inputFields/InputFieldWithIcon";
 import isValidPassword from "@/utils/isValidPassword";
+import { CREATE_USER } from "@/graph/mutations";
+import SecondaryButton from "@/components/buttons/SecondaryButton";
 
 /**
  * sign up form component to register a new user.
@@ -25,23 +30,35 @@ const SignupFormContainer = () => {
     email?: string;
     password?: string | React.ReactNode;
     confirmPassword?: string | React.ReactNode;
+    unknownError?: string;
   }>({
     username: "",
     email: "",
     password: "",
     confirmPassword: "",
+    unknownError: "",
   });
 
-  const handleChanges = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, id } = e.target;
-    // reset field error once user starts typing
-    // reset form errors
+  // mutation to create user
+  const [createUser, { loading }] = useMutation(CREATE_USER);
+  const router = useRouter();
+
+  // clear form errors
+  const clearFormErrors = () => {
     setFormErrors((prevState) => ({
       ...prevState,
       password: "",
       confirmPassword: "",
       username: "",
+      email: "",
+      unknownError: "",
     }));
+  };
+
+  const handleChanges = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, id } = e.target;
+    // reset form errors
+    clearFormErrors();
     // set state
     setSignUpDetails((prevState) => ({ ...prevState, [name]: value }));
   };
@@ -49,13 +66,13 @@ const SignupFormContainer = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const { password, confirmPassword, username } = signUpDetails;
+    const { password, confirmPassword, username, email } = signUpDetails;
 
-    // check if username is longer than 10 characters
-    if (username.length > 10) {
+    // check if username is longer than 40 characters
+    if (username.length > 40) {
       setFormErrors((prevState) => ({
         ...prevState,
-        username: "Username must be less than 10 characters",
+        username: "Username must be less than 40 characters",
       }));
       return;
     }
@@ -89,14 +106,40 @@ const SignupFormContainer = () => {
       return;
     }
 
-    //TODO: Make API call to create user
-    // update error state accordingly after API call
-
-    console.log(signUpDetails);
+    // create user
+    createUser({
+      variables: {
+        username,
+        email,
+        password,
+      },
+      onCompleted: (data) => {
+        localStorage.setItem("homesteaduser", JSON.stringify(data.createUser));
+        router.push("/");
+      },
+      onError: (error) => {
+        const { message } = error;
+        // check if username or email already exists
+        if (message.includes("email") || message.includes("username")) {
+          setFormErrors((prevState) => ({
+            ...prevState,
+            email: message.includes("email") ? message : "",
+            username: message.includes("username") ? message : "",
+          }));
+          return;
+        } else {
+          setFormErrors((prevState) => ({
+            ...prevState,
+            unknownError: "An unknown error occurred.",
+          }));
+          return;
+        }
+      },
+    });
   };
 
   return (
-    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+    <div className="relative flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm text-center">
         <span className="font-bold text-xl text-gray-800 hover:text-gray-700 transition-all duration-100">
           Homestead
@@ -104,7 +147,11 @@ const SignupFormContainer = () => {
         </span>
       </div>
 
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-md rounded-lg bg-white p-10">
+      <div
+        className={`mt-10 sm:mx-auto sm:w-full sm:max-w-md rounded-lg bg-white p-10 ${
+          formErrors.unknownError ? "blur-sm" : ""
+        }`}
+      >
         <h2 className="mt-6 text-left text-2xl font-bold leading-9 tracking-tight text-gray-700">
           Create your account
         </h2>
@@ -169,7 +216,18 @@ const SignupFormContainer = () => {
 
           <div className="w-full">
             <PrimaryButton type="submit" fontSize="text-base">
-              <span>Create account</span>
+              {loading ? (
+                <div className="w-full flex justify-center items-center py-1">
+                  <Image
+                    src="/loader.svg"
+                    width={50}
+                    height={50}
+                    alt="spinner"
+                  />
+                </div>
+              ) : (
+                <span>Create account</span>
+              )}
             </PrimaryButton>
           </div>
         </form>
@@ -184,6 +242,22 @@ const SignupFormContainer = () => {
           </Link>
         </p>
       </div>
+
+      {/* in case of an unknown error  */}
+      {formErrors.unknownError && (
+        <div className="absolute z-20 w-full h-full flex items-center justify-center">
+          <div className="text-center flex flex-col items-center justify-center space-y-2">
+            <Image src="/error.svg" width={150} height={150} alt="error" />
+            <span className="text-gray-800 font-medium">
+              {formErrors.unknownError}
+              <br /> Please click the button below to try again.
+            </span>
+            <SecondaryButton onClick={clearFormErrors}>
+              Try again
+            </SecondaryButton>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

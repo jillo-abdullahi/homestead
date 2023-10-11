@@ -15,6 +15,7 @@ interface PrimaryButtonProps {
   type?: "button" | "submit" | "reset" | undefined;
   onClick?: () => void;
 }
+
 const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   children,
   padding = "px-3.5 py-2.5",
