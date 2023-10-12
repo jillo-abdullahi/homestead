@@ -2,6 +2,10 @@ import { IconChevronRight, IconChevronLeft } from "@tabler/icons-react";
 
 /**
  * component that displays pagination
+ * @param {function} fetchNextPage - function to fetch next page
+ * @param {function} fetchPrevPage - function to fetch previous page
+ * @param {boolean} hasNextPage - boolean to indicate if there is a next page
+ * @param {boolean} hasPrevPage - boolean to indicate if there is a previous page
  * @returns
  */
 

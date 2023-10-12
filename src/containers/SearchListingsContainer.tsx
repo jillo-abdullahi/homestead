@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { useApolloClient } from "@apollo/client";
+import { FILTER_LISTINGS } from "@/graph/queries";
 import { useRouter } from "next/router";
 import { CurrencyDollarIcon } from "@heroicons/react/24/outline";
 import { IconDimensions } from "@tabler/icons-react";
@@ -9,22 +11,69 @@ import PrimaryButton from "@/components/buttons/PrimaryButton";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import SearchResults from "@/components/searchListings/SearchResults";
 import { SearchState } from "@/types";
-import { Listing } from "@prisma/client";
 
 /**
  * container component to show search form for listings
  * @returns
  */
-
 const SearchListingsContainer: React.FC = () => {
   const router = useRouter();
   const { query } = router.query;
+  const client = useApolloClient();
 
   const [searchState, setSearchState] = useState<SearchState>({
     query: "",
     filters: {},
   });
-  const [searchResults, setSearchResults] = useState();
+  const [searchResults, setSearchResults] = useState([]);
+  const [listingsFound, setListingsFound] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  /**
+   * function to fetch listings
+   * @param pagination - pagination object with skip and take
+   * @param query - search query used for initial search
+   * @returns void
+   */
+  const fetchListings = async (
+    pagination: { skip: number; take: number },
+    query?: string
+  ) => {
+    setLoading(true);
+    const { bedrooms, bathrooms, priceRange, area } = searchState.filters;
+    try {
+      const result = await client.query({
+        query: FILTER_LISTINGS,
+
+        variables: {
+          // pagination
+          ...pagination,
+
+          // filters
+          searchQuery: query || searchState.query,
+          bathrooms,
+          bedrooms,
+          maxArea: area?.max,
+          maxPrice: priceRange?.max,
+          minArea: area?.min,
+          minPrice: priceRange?.min,
+        },
+      });
+      const { data } = result;
+      setSearchResults(data.listings);
+      setListingsFound(data.getListingsCount);
+      setLoading(false);
+    } catch (error: any) {
+      setError(error);
+    }
+  };
+
+  useEffect(() => {
+    // only want to run this on initial render
+    // manually fetch listings when filters are changed afterwards
+    if (!query) return;
+    fetchListings({ skip: 0, take: 10 }, query as string);
+  }, [query]);
 
   // handle search query and filters change
   const handleSearchQueryChange = (
@@ -47,28 +96,10 @@ const SearchListingsContainer: React.FC = () => {
     }));
   };
 
-  //TODO: fetch listings
-  const listings: Listing[] = [];
-
-  // handle search query submit
-  const handleSearchQuerySubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!searchState.query) return;
-
-    // TODO: fetchFilteredResults();
-  };
-
-  const fetchFilteredResults = async () => {
-    //TODO: fetch filtered listings
-    console.log("fetching filtered listings");
-  };
-
+  // update search query when query param changes
   useEffect(() => {
     if (!query) return;
     setSearchState((prev) => ({ ...prev, query: query as string }));
-
-    // fetch listings with search query
-    // TODO: fetchFilteredResults();
   }, [query]);
 
   // clear filters
@@ -89,10 +120,9 @@ const SearchListingsContainer: React.FC = () => {
       {/* search form and filters  */}
       <div className="w-full border border-gray-100 rounded-xl p-6 space-y-4">
         <SearchInputField
-          placeholder="Search location, town, or estate"
+          placeholder="Search location, title, or description"
           value={searchState.query}
           handleChange={handleSearchQueryChange}
-          handleSubmit={handleSearchQuerySubmit}
         />
 
         {/* filters  */}
@@ -143,7 +173,9 @@ const SearchListingsContainer: React.FC = () => {
               </SecondaryButton>
             </div>
             <div className="min-w-[120px]">
-              <PrimaryButton onClick={fetchFilteredResults}>
+              <PrimaryButton
+                onClick={() => fetchListings({ skip: 0, take: 10 })}
+              >
                 Search
               </PrimaryButton>
             </div>
@@ -152,10 +184,15 @@ const SearchListingsContainer: React.FC = () => {
       </div>
 
       <div className="mt-10">
-        <div className="text-sm font-medium text-violet-700 border rounded-lg p-2 border-gray-100 w-fit">
-          {listings.length} listings found
-        </div>
-        <SearchResults searchResults={listings} />
+        <SearchResults
+          searchResults={searchResults}
+          refetch={fetchListings}
+          resultsCount={listingsFound}
+          loading={loading}
+          error={error}
+          emptyStateDescription="Try changing your search query or filters."
+          emptyStateTitle="No listings found"
+        />
       </div>
     </>
   );

@@ -43,3 +43,45 @@ export const GET_LISTING = gql`
     }
   }
 `;
+
+// filter listings query
+export const FILTER_LISTINGS = gql`
+  query Listings(
+    $bathrooms: Int
+    $bedrooms: Int
+    $maxArea: Int
+    $maxPrice: Int
+    $minArea: Int
+    $minPrice: Int
+    $searchQuery: String
+    $skip: Int
+    $take: Int
+  ) {
+    listings(
+      bathrooms: $bathrooms
+      bedrooms: $bedrooms
+      maxArea: $maxArea
+      maxPrice: $maxPrice
+      minArea: $minArea
+      minPrice: $minPrice
+      searchQuery: $searchQuery
+      skip: $skip
+      take: $take
+    ) {
+      id
+      title
+      price
+      location
+      images
+    }
+    getListingsCount(
+      bathrooms: $bathrooms
+      bedrooms: $bedrooms
+      maxArea: $maxArea
+      maxPrice: $maxPrice
+      minArea: $minArea
+      minPrice: $minPrice
+      searchQuery: $searchQuery
+    )
+  }
+`;
