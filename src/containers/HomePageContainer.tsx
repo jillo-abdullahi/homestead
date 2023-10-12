@@ -53,6 +53,9 @@ const HomePageContainer = () => {
       ? data?.getListingsCount
       : pages.next * LISTINGS_PER_PAGE;
 
+  const listingsAvailable = data?.getListingsCount > 0;
+  const showPagination = data?.getListingsCount > 10;
+
   return (
     <div className="w-full">
       <Landing />
@@ -66,19 +69,25 @@ const HomePageContainer = () => {
       </>
 
       <>
-        <div className="text-xs text-violet-700 p-2 rounded-full border border-gray-200 w-fit mt-2">
-          Showing{" "}
-          {currentPage === endPage ? (
-            <span>{endPage.toLocaleString()}</span>
-          ) : (
-            <span>
-              {currentPage.toLocaleString()} - {endPage.toLocaleString()}
-            </span>
-          )}{" "}
-          of {data?.getListingsCount.toLocaleString()}
-        </div>
-        <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 min-h-[400px]">
-          {data?.listings.length > 0 &&
+        {listingsAvailable && (
+          <div className="text-xs text-violet-700 p-2 rounded-full border border-gray-200 w-fit mt-2">
+            Showing{" "}
+            {currentPage === endPage ? (
+              <span>{endPage.toLocaleString()}</span>
+            ) : (
+              <span>
+                {currentPage.toLocaleString()} - {endPage.toLocaleString()}
+              </span>
+            )}{" "}
+            of {data?.getListingsCount.toLocaleString()}
+          </div>
+        )}
+        <div
+          className={`mt-6 grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 ${
+            listingsAvailable ? "sm:min-h-[400px]" : ""
+          }`}
+        >
+          {listingsAvailable &&
             data?.listings.map((listing: Listing) => {
               const {
                 id,
@@ -109,7 +118,7 @@ const HomePageContainer = () => {
         </div>
       </>
 
-      {data?.listings.length > 0 && (
+      {showPagination && (
         <div className="w-full flex items-center justify-center">
           <Pagination
             fetchNextPage={handleNextPage}
@@ -120,9 +129,7 @@ const HomePageContainer = () => {
         </div>
       )}
 
-      {data?.listings.length === 0 && !loading && !error && (
-        <ListingsEmptyState />
-      )}
+      {!listingsAvailable && !loading && !error && <ListingsEmptyState />}
     </div>
   );
 };
