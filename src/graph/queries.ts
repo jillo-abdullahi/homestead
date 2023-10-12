@@ -39,6 +39,7 @@ export const GET_LISTING = gql`
       title
       user {
         username
+        id
       }
     }
   }

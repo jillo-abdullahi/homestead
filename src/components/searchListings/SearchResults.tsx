@@ -95,13 +95,9 @@ const SearchResults: React.FC<SearchResultsProps> = ({
         {listingsAvailable && (
           <div className="text-xs text-violet-700 p-2 rounded-lg border border-gray-200 w-fit mt-2">
             Showing{" "}
-            {currentPage === endPage ? (
-              <span>{endPage.toLocaleString()}</span>
-            ) : (
-              <span>
-                {currentPage.toLocaleString()} - {endPage.toLocaleString()}
-              </span>
-            )}{" "}
+            <span>
+              {currentPage.toLocaleString()} - {endPage.toLocaleString()}
+            </span>{" "}
             of {resultsCount.toLocaleString()}
           </div>
         )}

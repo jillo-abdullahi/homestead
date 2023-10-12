@@ -23,3 +23,16 @@ export const removeLoggedInUser = () => {
   localStorage.removeItem("homesteaduser");
   window.location.reload();
 };
+
+/**
+ * function to get logged in user from local storage
+ * @returns {User} user
+ */
+
+export const getLoggedInUser = (): User | null => {
+  const user = localStorage.getItem("homesteaduser");
+  if (user) {
+    return JSON.parse(user);
+  }
+  return null;
+};
