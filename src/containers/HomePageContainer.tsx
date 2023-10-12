@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
-import Landing from "@/components/Landing";
+import Landing from "@/components/landing";
 import ListingsEmptyState from "@/components/listingDetails/ListingsEmptyState";
-import PropertyListing from "@/components/PropertyListing";
+import PropertyListing from "@/components/listingDetails/PropertyListing";
 import { ListingLoadingState } from "@/components/listingDetails/ListingLoadingState";
 import { GET_ALL_LISTINGS } from "@/graph/queries";
 import { Listing } from "@/types";

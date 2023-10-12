@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import Navbar from "@/components/navbar/Navbar";
-import Footer from "@/components/Footer";
+import Footer from "@/components/footer";
 import SearchListingsContainer from "@/containers/SearchListingsContainer";
 
 const SearchListings: NextPage = () => {

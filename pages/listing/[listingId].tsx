@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import Navbar from "@/components/navbar/Navbar";
-import Footer from "@/components/Footer";
+import Footer from "@/components/footer";
 import ListingDetailsContainer from "@/containers/ListingDetailsContainer";
 
 const Login: NextPage = () => {

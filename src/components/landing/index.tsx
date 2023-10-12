@@ -20,7 +20,7 @@ const Landing: React.FC = () => {
   // handle search query submit
   const handleSearchQuerySubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if(!searchQuery) return;
+    if (!searchQuery) return;
 
     // navigate to search page with search query
     router.push(`/search-listings?query=${searchQuery}`);

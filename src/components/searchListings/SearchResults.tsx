@@ -1,5 +1,5 @@
 import { memo } from "react";
-import PropertyListing from "@/components/PropertyListing";
+import PropertyListing from "@/components/listingDetails/PropertyListing";
 import ListingsEmptyState from "@/components/listingDetails/ListingsEmptyState";
 import { Listing } from "@prisma/client";
 /**
