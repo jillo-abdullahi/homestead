@@ -3,8 +3,8 @@ import { gql } from "@apollo/client";
 // fetch all listings query
 // TODO: to add pagination
 export const GET_ALL_LISTINGS = gql`
-  query Listings {
-    listings {
+  query Listings($skip: Int, $take: Int) {
+    listings(skip: $skip, take: $take) {
       area
       bathrooms
       bedrooms
@@ -19,6 +19,7 @@ export const GET_ALL_LISTINGS = gql`
         username
       }
     }
+    getListingsCount
   }
 `;
 
