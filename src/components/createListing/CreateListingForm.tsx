@@ -1,3 +1,4 @@
+import { useState } from "react";
 import InputFieldWithIcon from "@/components/inputFields/InputFieldWithIcon";
 import IsRequiredLabel from "@/components/inputFields/IsRequiredLabel";
 import ImageUploader from "@/components/imageUploader/ImageUploader";
@@ -15,15 +16,15 @@ import { NewListing } from "@/components/createListing/types";
  * @param {function} handleSubmitListing - function to submit listing details
  * @param {function} handleChanges - function to handle input changes
  * @param {NewListing} newListingDetails - new listing details
- * @param {NewListing} formErrors - form errors
  * @returns
  */
 
 interface CreateListingFormProps {
   handleSubmitListing: (e: React.FormEvent<HTMLFormElement>) => void;
-  handleChanges: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  handleChanges: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
   newListingDetails: NewListing;
-  formErrors: NewListing;
   selectedImages: File[];
   setSelectedImages: React.Dispatch<React.SetStateAction<File[]>>;
 }
@@ -32,10 +33,11 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
   handleSubmitListing,
   handleChanges,
   newListingDetails,
-  formErrors,
   selectedImages,
   setSelectedImages,
 }) => {
+  const [isFileSizeError, setIsFileSizeError] = useState(false);
+
   return (
     <form className="mt-6" onSubmit={handleSubmitListing}>
       <div className="flex flex-col items-center justify-center md:grid md:grid-cols-12 gap-6 ">
@@ -44,6 +46,8 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
           <ImageUploader
             selectedImages={selectedImages}
             setSelectedImages={setSelectedImages}
+            isFileSizeError={isFileSizeError}
+            setIsFileSizeError={setIsFileSizeError}
           />
         </div>
 
@@ -59,7 +63,6 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
             value={newListingDetails.title}
             label={<IsRequiredLabel label="Title" />}
             isRequired={true}
-            error={formErrors.title}
           />
           {/* description  */}
           <div>
@@ -92,7 +95,6 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
             value={newListingDetails.location}
             label={<IsRequiredLabel label="Location" />}
             isRequired={true}
-            error={formErrors.title}
           />
           {/* Bathrooms and bedrooms */}
           <div className="grid grid-cols-12 gap-2 w-full">
@@ -106,7 +108,6 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
                 icon={<IconBed className="h-4 w-4 text-gray-500" />}
                 value={newListingDetails.bedrooms}
                 label="Bedrooms"
-                error={formErrors.bedrooms}
               />
             </div>
             <div className="col-span-6">
@@ -119,7 +120,6 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
                 icon={<IconBath className="h-4 w-4 text-gray-500" />}
                 value={newListingDetails.bathrooms}
                 label="Bathrooms"
-                error={formErrors.bathrooms}
               />
             </div>
           </div>
@@ -135,7 +135,6 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
                 icon={<IconDimensions className="h-4 w-4 text-gray-500" />}
                 value={newListingDetails.area}
                 label="Area"
-                error={formErrors.area}
               />
             </div>
             <div className="col-span-6">
@@ -149,7 +148,6 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
                 value={newListingDetails.price}
                 isRequired={true}
                 label={<IsRequiredLabel label="Price" />}
-                error={formErrors.price}
               />
             </div>
           </div>
@@ -157,7 +155,11 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
       </div>
       <div className="w-full flex items-center justify-end">
         <div className="w-[150px] mt-6">
-          <PrimaryButton type="submit" fontSize="text-base">
+          <PrimaryButton
+            type="submit"
+            fontSize="text-base"
+            disabled={isFileSizeError}
+          >
             <span>Create listing</span>
           </PrimaryButton>
         </div>

@@ -69,7 +69,7 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
         </Transition.Child>
 
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-          <div className="flex min-h-full items-end justify-center py-4 text-center sm:items-center sm:p-0">
+          <div className="flex min-h-full items-center justify-center py-4 text-center sm:items-center sm:p-0">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -79,14 +79,11 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm">
+              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white pb-4 pt-5 text-left shadow-xl transition-all w-3/4 sm:my-8 sm:w-full sm:max-w-md">
                 <div>
-                  <div className="text-gray-700 text-lg font-bold border-b border-gray-100 px-4 pb-2">
-                    {title}
-                  </div>
                   <div className="mt-6 px-6">
                     {progressStatus === ProgressStatus.InProgress && (
-                      <div className="space-y-4 mt-10">
+                      <div className=" mt-10">
                         <div className="relative flex items-center justify-center mb-10">
                           <Image
                             src="/progressIcons/inProgress.svg"
@@ -102,7 +99,10 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
                             className="absolute inset-x-0 inset-y-0 mx-auto my-auto"
                           />
                         </div>
-                        <div className="text-gray-700 font-medium w-full text-center mt-6">
+                        <div className="text-gray-700 text-lg font-bold px-4 pb-2 w-full text-center">
+                          {title}
+                        </div>
+                        <div className="text-gray-700 font-medium w-full text-center">
                           {loadingText}
                         </div>
                       </div>
@@ -146,7 +146,7 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
                         </div>
                         <div>
                           <PrimaryButton
-                            onClick={() => console.log("Close Modal")}
+                            onClick={onClose}
                           >
                             <span>Close</span>
                           </PrimaryButton>

@@ -20,20 +20,12 @@ const CreateListingContainer: React.FC = () => {
     area: "",
   });
 
-  const [formErrors, setFormErrors] = useState({
-    title: "",
-    location: "",
-    price: "",
-    bedrooms: "",
-    bathrooms: "",
-    description: "",
-    area: "",
-  });
   const [openProgressModal, setOpenProgressModal] = useState(false);
   const [progressStatus, setProgressStatus] = useState<ProgressStatus | null>(
     null
   );
-
+  const [errorText, setErrorText] = useState("");
+  const [isUploadingImages, setIsUploadingImages] = useState(false);
   const [token, setToken] = useState("token");
 
   // image states
@@ -52,7 +44,7 @@ const CreateListingContainer: React.FC = () => {
   const [createListing, { data }] = useMutation(CREATE_LISTING, {
     context: {
       headers: {
-        authorization: token,
+        authorization: token ?? "",
       },
     },
   });
@@ -68,13 +60,14 @@ const CreateListingContainer: React.FC = () => {
       description: "",
       area: "",
     });
-
+    setErrorText("");
     setOpenProgressModal(false);
   };
 
   // handle image uploads
   const handleImageUpload = async () => {
     setProgressStatus(ProgressStatus.InProgress);
+    setIsUploadingImages(true);
     const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUD_NAME!;
     const UPLOAD_PRESET = process.env.NEXT_PUBLIC_UPLOAD_PRESET!;
     const UPLOAD_FOLDER = process.env.NEXT_PUBLIC_CLOUDINARY_IMAGE_FOLDER!;
@@ -95,18 +88,17 @@ const CreateListingContainer: React.FC = () => {
         );
 
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          throw new Error("Image upload failed");
         }
 
-        return response.json(); // Or handle response as needed
+        return response.json();
       } catch (error) {
-        console.error("Error uploading image:", error);
-        return null; // Or handle error differently
+        throw new Error("Image upload failed");
       }
     });
 
     const results = await Promise.all(uploadPromises);
-    return results; // This will be an array of responses
+    return results;
   };
 
   // send to server
@@ -119,6 +111,7 @@ const CreateListingContainer: React.FC = () => {
     // upload images first
     handleImageUpload()
       .then((results) => {
+        setIsUploadingImages(false);
         // extract image urls from results
         const images = results.map((result) => result.secure_url);
 
@@ -143,16 +136,21 @@ const CreateListingContainer: React.FC = () => {
             area: Number(area),
             images,
           },
-          onCompleted: (data) => {
+          onCompleted: () => {
             setProgressStatus(ProgressStatus.Completed);
           },
           onError: (error) => {
+            const { message } = error;
+            if (message.includes("not authenticated")) {
+              setErrorText("You are not authorized to perform this action");
+            }
             setProgressStatus(ProgressStatus.Error);
           },
         });
       })
       .catch((error) => {
-        console.log({ "IMAGE UPLOADS FAILED": error });
+        setProgressStatus(ProgressStatus.Error);
+        setErrorText(error.message);
       });
   };
 
@@ -183,7 +181,6 @@ const CreateListingContainer: React.FC = () => {
           handleSubmitListing={handleSubmitListing}
           handleChanges={handleChanges}
           newListingDetails={newListingDetails}
-          formErrors={formErrors}
           selectedImages={selectedImages}
           setSelectedImages={setSelectedImages}
         />
@@ -193,9 +190,11 @@ const CreateListingContainer: React.FC = () => {
         open={openProgressModal}
         onClose={closeProgressModal}
         title="Create listing"
-        loadingText="Creating listing..."
+        loadingText={
+          isUploadingImages ? "Uploading images" : "Finalizing listing"
+        }
         successText="Listing created successfully!"
-        errorText="An error occurred while creating the listing."
+        errorText={errorText || "An error occurred while creating the listing."}
         progressStatus={progressStatus}
         listingId={data?.createListing.id}
       />
