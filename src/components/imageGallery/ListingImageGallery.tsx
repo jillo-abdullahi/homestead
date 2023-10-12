@@ -17,7 +17,6 @@ interface ListingImageGalleryProps {
 const ListingImageGallery: React.FC<ListingImageGalleryProps> = ({
   images,
 }) => {
-
   const imagesWithThumbnails = images.map((image) => ({
     original: image,
     thumbnail: image,

@@ -4,6 +4,7 @@ import { CREATE_LISTING } from "@/graph/mutations";
 import ProgressModal from "@/components/progressModal/ProgressModal";
 import { ProgressStatus } from "@/components/progressModal/types";
 import CreateListingForm from "@/components/createListing/CreateListingForm";
+import uploadImagesToCloudinary from "@/utils/uploadImages";
 /**
  * create listing container with create listing form.
  * @returns
@@ -64,52 +65,17 @@ const CreateListingContainer: React.FC = () => {
     setOpenProgressModal(false);
   };
 
-  // handle image uploads
-  const handleImageUpload = async () => {
-    setProgressStatus(ProgressStatus.InProgress);
-    setIsUploadingImages(true);
-    const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUD_NAME!;
-    const UPLOAD_PRESET = process.env.NEXT_PUBLIC_UPLOAD_PRESET!;
-    const UPLOAD_FOLDER = process.env.NEXT_PUBLIC_CLOUDINARY_IMAGE_FOLDER!;
-
-    const uploadPromises = selectedImages.map(async (file) => {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", UPLOAD_PRESET);
-      formData.append("folder", UPLOAD_FOLDER);
-
-      try {
-        const response = await fetch(
-          `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Image upload failed");
-        }
-
-        return response.json();
-      } catch (error) {
-        throw new Error("Image upload failed");
-      }
-    });
-
-    const results = await Promise.all(uploadPromises);
-    return results;
-  };
-
   // send to server
   const handleSubmitListing = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // open progress modal
     setOpenProgressModal(true);
+    setProgressStatus(ProgressStatus.InProgress);
+    setIsUploadingImages(true);
 
     // upload images first
-    handleImageUpload()
+    uploadImagesToCloudinary(selectedImages)
       .then((results) => {
         setIsUploadingImages(false);
         // extract image urls from results

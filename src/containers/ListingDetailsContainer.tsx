@@ -27,28 +27,25 @@ const ListingDetailsContainer: React.FC = () => {
 
   const listing = data?.listing;
 
-
   if (error || loading)
     return <ListingDetailsEmptyState error={error ? true : false} />;
 
   return (
-    <div className="flex flex-col items-center justify-center md:grid md:grid-cols-12 gap-6 mt-10 sm:mt-28">
-      {
-        <div className="w-full md:col-span-6">
-          {/* image carousel */}
+    <div className="flex flex-col items-center justify-center md:grid md:grid-cols-12 gap-6 mt-10 sm:mt-28 w-full">
+      <div className="w-full md:col-span-6">
+        {listing?.images?.length === 0 && (
+          <div className="w-full min-h-[20rem] min-h-md flex items-center justify-center bg-gray-200 rounded-lg">
+            <IconPhotoX size={32} className="text-gray-400" />
+          </div>
+        )}
 
-          {listing?.images?.length === 0 && (
-            <div className="w-full min-h-[20rem] min-h-md flex items-center justify-center bg-gray-200 rounded-lg">
-              <IconPhotoX size={32} className="text-gray-400" />
-            </div>
-          )}
+        {/* image carousel */}
+        {listing?.images && listing?.images?.length > 0 && (
+          <ListingImageGallery images={listing?.images ?? []} />
+        )}
+      </div>
 
-          {listing?.images && listing?.images?.length > 0 && (
-            <ListingImageGallery images={listing?.images ?? []} />
-          )}
-        </div>
-      }
-      <div className="w-full h-full md:col-span-6 space-y-4 flex flex-col items-start justify-center">
+      <div className="w-full h-full md:col-span-6 space-y-4 flex flex-col items-start justify-start">
         {/* title and location  */}
         {listing?.title && (
           <ListingTitle
