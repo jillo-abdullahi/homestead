@@ -1,5 +1,9 @@
 import builder from "../builder";
-import { getListings, getListingById } from "../../resolvers/listings/queries";
+import {
+  getListings,
+  getListingById,
+  getListingsCount,
+} from "../../resolvers/listings/queries";
 
 //TODO: add total records count for listings
 builder.queryType({
@@ -37,6 +41,26 @@ builder.queryType({
       },
       resolve: async (query, root, args, ctx, info) => {
         return await getListingById({ ...args });
+      },
+    }),
+
+    getListingsCount: t.field({
+      description: "Get count of listings with a particular filter",
+      type: "Int",
+      args: {
+        // filter query
+        searchQuery: t.arg.string({ required: false }),
+
+        // some specific filters
+        bedrooms: t.arg.int({ required: false }),
+        bathrooms: t.arg.int({ required: false }),
+        minPrice: t.arg.int({ required: false }),
+        maxPrice: t.arg.int({ required: false }),
+        minArea: t.arg.int({ required: false }),
+        maxArea: t.arg.int({ required: false }),
+      },
+      resolve: async (parent, args, ctx, info) => {
+        return await getListingsCount({ ...args });
       },
     }),
   }),

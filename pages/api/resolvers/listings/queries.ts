@@ -1,4 +1,6 @@
 import prisma from "../../utils/prisma";
+import getListingsFilter from "../../utils/getListingsFilter";
+import { Nullable, ListingsFilter } from "../../types";
 /**
  * resolver function to fetch all listings - paginated
  * args: skip, take
@@ -16,15 +18,15 @@ import prisma from "../../utils/prisma";
  */
 
 export const getListings = async (args: {
-  skip?: number | null | undefined;
-  take?: number | null | undefined;
-  searchQuery?: string | null | undefined;
-  bedrooms?: number | null | undefined;
-  bathrooms?: number | null | undefined;
-  minPrice?: number | null | undefined;
-  maxPrice?: number | null | undefined;
-  minArea?: number | null | undefined;
-  maxArea?: number | null | undefined;
+  skip?: Nullable<number>;
+  take?: Nullable<number>;
+  searchQuery?: Nullable<string>;
+  bedrooms?: Nullable<number>;
+  bathrooms?: Nullable<number>;
+  minPrice?: Nullable<number>;
+  maxPrice?: Nullable<number>;
+  minArea?: Nullable<number>;
+  maxArea?: Nullable<number>;
 }) => {
   const {
     skip,
@@ -42,60 +44,36 @@ export const getListings = async (args: {
     maxPrice,
   } = args;
 
-  // form filter object
-  const filterConditions = [];
-
-  // handle searchQuery
-  if (searchQuery) {
-    filterConditions.push({
-      OR: [
-        { title: { contains: searchQuery, mode: "insensitive" } },
-        { description: { contains: searchQuery, mode: "insensitive" } },
-        { location: { contains: searchQuery, mode: "insensitive" } },
-      ],
-    });
-  }
-
-  // handle bedrooms
-  if (bedrooms) {
-    filterConditions.push({ bedrooms: { equals: bedrooms } });
-  }
-
-  // handle bathrooms
-  if (bathrooms) {
-    filterConditions.push({ bathrooms: { equals: bathrooms } });
-  }
-
-  // handle minArea
-  if (minArea) {
-    filterConditions.push({ area: { gte: minArea } });
-  }
-
-  // handle maxArea
-  if (maxArea) {
-    filterConditions.push({ area: { lte: maxArea } });
-  }
-
-  // handle minPrice
-  if (minPrice) {
-    filterConditions.push({ price: { gte: minPrice } });
-  }
-
-  // handle maxPrice
-  if (maxPrice) {
-    filterConditions.push({ price: { lte: maxPrice } });
-  }
-
-  const filter = {
-    AND: filterConditions,
-  };
+  const filters = getListingsFilter({
+    searchQuery,
+    bedrooms,
+    bathrooms,
+    minArea,
+    maxArea,
+    minPrice,
+    maxPrice,
+  });
 
   return await prisma.listing.findMany({
     skip: skip || 0,
     take: take || 10,
+    orderBy: {
+      createdAt: "desc",
+    },
 
     // TODO: Fix type here
-    where: filter as any,
+    where: filters as any,
+  });
+};
+
+/**
+ * resolver method to return listings count matching a filter
+ * @param args - filter
+ * @returns - count of listings matching the filter
+ */
+export const getListingsCount = async (args: ListingsFilter) => {
+  return await prisma.listing.count({
+    where: getListingsFilter({ ...args }) as any,
   });
 };
 
