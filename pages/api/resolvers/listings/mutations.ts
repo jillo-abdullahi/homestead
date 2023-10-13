@@ -1,5 +1,12 @@
 import { User } from "@prisma/client";
 import prisma from "../../utils/prisma";
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: process.env.NEXT_PUBLIC_CLOUD_NAME,
+  api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 /**
  * resolver function to create a new listing
  * @param args - title, description, price, location, bedrooms, bathrooms, area, images
@@ -133,8 +140,17 @@ export const deleteListing = async (args: { id: string }, user: User) => {
     if (!listing) throw new Error("Listing not found");
     if (listing.userId !== user?.id)
       throw new Error("You don't own this listing");
+
+    // get listing image public ids
+    const images = listing.images.map((image) => {
+      const imageUrl = new URL(image);
+      return imageUrl.searchParams.get("pid");
+    });
+
+    // delete images from cloudinary
+    await cloudinary.api.delete_resources(images, { invalidate: true });
   } catch (error) {
-    throw new Error("Error finding listing");
+    throw new Error(`Error finding listing: ${error}`);
   }
 
   try {

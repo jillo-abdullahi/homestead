@@ -61,8 +61,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   const removeSavedImage = useCallback((image: string) => {
     // run mutation to delete image from server
     // update listing images
-    const imagaUrl = new URL(image);
-    const publicId = imagaUrl.searchParams.get("pid");
+    const imageUrl = new URL(image);
+    const publicId = imageUrl.searchParams.get("pid");
 
     // remove image from listing images
     setListingImages &&
