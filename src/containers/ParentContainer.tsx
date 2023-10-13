@@ -36,14 +36,6 @@ const ParentContainer: React.FC<ParentContainerProps> = ({ children }) => {
   const bannerMessage =
     "We sent a confirmation link to your email. Please confirm your email.";
 
-  console.log({
-    pathname,
-    isConfirmationPage,
-    isUserConfirmed: userIsConfirmed,
-
-    TRUE: !userIsConfirmed && !isConfirmationPage,
-  });
-
   return (
     <div>
       {!userIsConfirmed && !isConfirmationPage && (
