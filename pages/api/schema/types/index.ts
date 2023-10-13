@@ -1,5 +1,17 @@
 import builder from "../builder";
 import { signToken } from "../../utils/jwt";
+const cloudinary = require("cloudinary").v2;
+
+// Signature type for secure uploads to cloudinary
+export class Signature {
+  timestamp: string;
+  folder: string;
+
+  constructor(timestamp: string, folder: string) {
+    this.timestamp = timestamp;
+    this.folder = folder;
+  }
+}
 
 // Listing type
 builder.prismaObject("Listing", {
@@ -38,6 +50,28 @@ builder.prismaObject("User", {
           id,
           confirmed,
         });
+      },
+    }),
+  }),
+});
+
+// Cloudinary signature type
+builder.objectType(Signature, {
+  name: "Signature",
+  description: "A signature",
+  fields: (t) => ({
+    timestamp: t.exposeString("timestamp"),
+    signature: t.string({
+      resolve: (parent) => {
+        const { timestamp, folder } = parent;
+        const signature = cloudinary.utils.api_sign_request(
+          {
+            timestamp: timestamp,
+            folder,
+          },
+          process.env.CLOUDINARY_API_SECRET
+        );
+        return signature;
       },
     }),
   }),

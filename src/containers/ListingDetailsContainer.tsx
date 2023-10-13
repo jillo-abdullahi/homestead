@@ -39,6 +39,10 @@ const ListingDetailsContainer: React.FC = () => {
     }
   }, [listing?.user.id]);
 
+  const handleEditListing = () => {
+    router.push(`/update-listing/${listingId}`);
+  };
+
   if (error || loading)
     return <ListingDetailsEmptyState error={error ? true : false} />;
 
@@ -65,7 +69,9 @@ const ListingDetailsContainer: React.FC = () => {
                   Admin zone
                 </div>
                 <div className="w-full flex flex-col space-y-6">
-                  <SecondaryButton>Edit Listing</SecondaryButton>
+                  <SecondaryButton onClick={handleEditListing}>
+                    Edit Listing
+                  </SecondaryButton>
                   <button className="text-red-500 hover:bg-red-100 border border-red-600 transition-all duration-150 rounded-lg py-3 text-sm">
                     Delete Listing
                   </button>

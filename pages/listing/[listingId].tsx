@@ -3,7 +3,7 @@ import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer";
 import ListingDetailsContainer from "@/containers/ListingDetailsContainer";
 
-const Login: NextPage = () => {
+const UpdateListing: NextPage = () => {
   return (
     <main className="flex flex-col min-h-screen">
       <div className="flex-grow container">
@@ -15,4 +15,4 @@ const Login: NextPage = () => {
   );
 };
 
-export default Login;
+export default UpdateListing;

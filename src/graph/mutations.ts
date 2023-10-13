@@ -98,3 +98,43 @@ export const CREATE_LISTING = gql`
     }
   }
 `;
+
+// update listing
+export const UPDATE_LISTING = gql`
+  mutation UpdateListing(
+    $updateListingId: String!
+    $images: [String!]!
+    $location: String!
+    $price: Float!
+    $title: String!
+    $area: Int
+    $bathrooms: Int
+    $bedrooms: Int
+    $description: String
+  ) {
+    updateListing(
+      id: $updateListingId
+      images: $images
+      location: $location
+      price: $price
+      title: $title
+      area: $area
+      bathrooms: $bathrooms
+      bedrooms: $bedrooms
+      description: $description
+    ) {
+      id
+      title
+    }
+  }
+`;
+
+// request signature for image upload
+export const REQUEST_CLOUDINARY_SIGNATURE = gql`
+  mutation RequestUploadSignature($folder: String!, $timestamp: String!) {
+    requestUploadSignature(folder: $folder, timestamp: $timestamp) {
+      signature
+      timestamp
+    }
+  }
+`;

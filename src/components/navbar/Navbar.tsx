@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import Avatar from "@/components/navbar/Avatar";
+import { getLoggedInUser } from "@/utils/saveLoggedInUser";
 
 /**
  * Main nav component with links to other pages
@@ -35,9 +36,9 @@ const Navbar: React.FC<NavbarProps> = ({ isOnCreateListingPage = false }) => {
 
   // check if user is logged in
   useEffect(() => {
-    const user = localStorage.getItem("homesteaduser");
-    if (user) {
-      const { username, email } = JSON.parse(user);
+    const loggedInUser = getLoggedInUser();
+    if (loggedInUser) {
+      const { username, email } = loggedInUser;
       setUser({ username, email });
     }
   }, []);

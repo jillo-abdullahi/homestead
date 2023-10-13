@@ -5,6 +5,10 @@ import SelectedImage from "@/components/imageUploader/SelectedImage";
  * component to handle image uploads when creating a listing
  * @param {Array<File>} selectedImages - array of selected images
  * @param {React.Dispatch<React.SetStateAction<File[]>>} setSelectedImages - function to set selected images
+ * @param {boolean} isFileSizeError - boolean to indicate if image size is too large
+ * @param {React.Dispatch<React.SetStateAction<boolean>>} setIsFileSizeError - function to set isFileSizeError
+ * @param {string[]} listingImages - array of listing images if on update listing page
+ * @param {React.Dispatch<React.SetStateAction<string[]>>} setListingImages - function to set listing images
  * @returns
  */
 
@@ -13,6 +17,8 @@ interface ImageUploaderProps {
   setSelectedImages: React.Dispatch<React.SetStateAction<File[]>>;
   isFileSizeError: boolean;
   setIsFileSizeError: React.Dispatch<React.SetStateAction<boolean>>;
+  listingImages?: string[];
+  setListingImages?: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const ImageUploader: React.FC<ImageUploaderProps> = ({
@@ -20,6 +26,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   setSelectedImages,
   isFileSizeError,
   setIsFileSizeError,
+  listingImages,
+  setListingImages,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   // handle file upload
@@ -27,6 +35,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     const files = e.target.files;
 
     if (!files) return;
+
+    console.log({ files });
     setSelectedImages((prevState) => [...prevState, ...files]);
   };
 
@@ -46,6 +56,21 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     setSelectedImages((prevImages) =>
       prevImages.filter((_, idx) => idx !== index)
     );
+  }, []);
+
+  const removeSavedImage = useCallback((image: string) => {
+    // run mutation to delete image from server
+    // update listing images
+    const imagaUrl = new URL(image);
+    const publicId = imagaUrl.searchParams.get("pid");
+
+    // remove image from listing images
+    setListingImages &&
+      setListingImages((prevImages) =>
+        prevImages?.filter((img) => img !== image)
+      );
+
+    console.log({ publicId });
   }, []);
 
   return (
@@ -80,24 +105,16 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
         </div>
       </div>
       {/* images preview  */}
-      <>
-        <div className="text-sm text-gray-700 pt-2">
-          {selectedImages.length}{" "}
-          {selectedImages.length === 1 ? "image" : "images"} added.
-        </div>
-        {isFileSizeError && (
-          <div className="text-xs border border-red-500 bg-red-100 text-red-500 rounded-md p-1">
-            Image(s) highlighted in red are too large.
-          </div>
-        )}
-        <div className="max-h-[300px] overflow-scroll no-scrollbar">
-          <SelectedImage
-            selectedImages={selectedImages}
-            removeImage={removeImage}
-            setIsFileSizeError={setIsFileSizeError}
-          />
-        </div>
-      </>
+      <div className="max-h-[300px] overflow-scroll no-scrollbar">
+        <SelectedImage
+          selectedImages={selectedImages}
+          removeImage={removeImage}
+          removeSavedImage={removeSavedImage}
+          setIsFileSizeError={setIsFileSizeError}
+          listingImages={listingImages}
+          isFileSizeError={isFileSizeError}
+        />
+      </div>
     </div>
   );
 };

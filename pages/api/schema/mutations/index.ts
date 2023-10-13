@@ -12,6 +12,7 @@ import {
   createListing,
   updateListing,
 } from "../../resolvers/listings/mutations";
+import { Signature } from "../types";
 
 builder.mutationType({
   // create a new user
@@ -149,6 +150,20 @@ builder.mutationType({
         const { email } = args;
 
         return await resendUserConfirmation({ email });
+      },
+    }),
+
+    // send an upload signature for secure uploads to cloudinary
+    requestUploadSignature: t.field({
+      description: "Mutation to return signature for image uploads",
+      type: Signature,
+      args: {
+        timestamp: t.arg.string({ required: true }),
+        folder: t.arg.string({ required: true }),
+      },
+      resolve: (root, args) => {
+        const { timestamp, folder } = args;
+        return new Signature(timestamp, folder);
       },
     }),
   }),
