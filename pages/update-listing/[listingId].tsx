@@ -10,7 +10,7 @@ import UpdateListingContainer from "@/containers/UpdateListingContainer";
 const UpdateListing: NextPage = () => {
   return (
     <main>
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col bg-gray-100">
         <div className="flex-grow container">
           <Navbar />
           <UpdateListingContainer />

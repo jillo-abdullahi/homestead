@@ -15,6 +15,11 @@ interface ParentContainerProps {
 const ParentContainer: React.FC<ParentContainerProps> = ({ children }) => {
   const [userIsConfirmed, setUserIsConfirmed] = useState(true);
   const router = useRouter();
+
+  // we don't want to show the banner on the confirm email page
+  const { pathname } = router;
+  const isConfirmationPage = pathname.includes("confirm-email");
+
   // check if logged in user is confirmed
   useEffect(() => {
     const loggedInUser = getLoggedInUser();
@@ -26,14 +31,18 @@ const ParentContainer: React.FC<ParentContainerProps> = ({ children }) => {
         setUserIsConfirmed(true);
       }
     }
-  }, []);
+  }, [pathname]);
 
   const bannerMessage =
     "We sent a confirmation link to your email. Please confirm your email.";
 
-  // we don't want to show the banner on the confirm email page
-  const { pathname } = router;
-  const isConfirmationPage = pathname.includes("confirm-email");
+  console.log({
+    pathname,
+    isConfirmationPage,
+    isUserConfirmed: userIsConfirmed,
+
+    TRUE: !userIsConfirmed && !isConfirmationPage,
+  });
 
   return (
     <div>

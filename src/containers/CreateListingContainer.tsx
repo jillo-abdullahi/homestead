@@ -156,7 +156,7 @@ const CreateListingContainer: React.FC = () => {
   );
 
   return (
-    <div className="flex min-h-full flex-1 flex-col justify-center">
+    <div className="flex min-h-full flex-1 flex-col justify-center pb-10">
       <div className="mt-10 sm:mx-auto sm:w-full rounded-lg bg-white p-10">
         <div className="space-y-1 text-left">
           <h2 className="text-2xl font-bold leading-9 tracking-tight text-gray-700">
