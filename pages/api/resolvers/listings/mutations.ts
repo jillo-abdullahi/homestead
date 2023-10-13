@@ -114,3 +114,34 @@ export const updateListing = async (
     throw new Error(`Error updating listing: ${error}`);
   }
 };
+
+/**
+ * resolver function to delete a listing
+ * @param args - id
+ * @returns - deleted listing
+ */
+
+export const deleteListing = async (args: { id: string }, user: User) => {
+  const { id } = args;
+
+  // make sure the user owns the listing
+  try {
+    const listing = await prisma.listing.findUnique({
+      where: { id },
+    });
+
+    if (!listing) throw new Error("Listing not found");
+    if (listing.userId !== user?.id)
+      throw new Error("You don't own this listing");
+  } catch (error) {
+    throw new Error("Error finding listing");
+  }
+
+  try {
+    return await prisma.listing.delete({
+      where: { id },
+    });
+  } catch (error) {
+    throw new Error("Error deleting listing");
+  }
+};

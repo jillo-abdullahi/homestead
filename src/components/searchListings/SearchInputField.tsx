@@ -23,8 +23,16 @@ const SearchInputField: React.FC<SearchInputFieldProps> = ({
   const router = useRouter();
   // hide search form on search page
   const isOnHomePage = router.pathname === "/";
+
+  // prevent form submission on search page
+  const preventDefault = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  };
   return (
-    <form className="relative mt-2 flex items-center" onSubmit={handleSubmit}>
+    <form
+      className="relative mt-2 flex items-center"
+      onSubmit={handleSubmit ?? preventDefault}
+    >
       <input
         type="text"
         name="search"

@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { IconPhotoX } from "@tabler/icons-react";
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import moment from "moment";
 import ListingImageGallery from "@/components/imageGallery/ListingImageGallery";
 import ListingPrice from "@/components/listingDetails/ListingPrice";
 import ListingSpecs from "@/components/listingDetails/ListingSpecs";
 import ListingTitle from "@/components/listingDetails/ListingTitle";
-import { GET_LISTING } from "@/graph/queries";
 import { ListingDetailsEmptyState } from "@/components/listingDetails/ListingDetailsEmptyState";
 import { getLoggedInUser } from "@/utils/saveLoggedInUser";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
+import DeleteListingModal from "@/components/deleteListing/DeleteListingModal";
+import { GET_LISTING } from "@/graph/queries";
+import { DELETE_LISTING } from "@/graph/mutations";
+import { DeletionProgress } from "@/components/deleteListing/types";
 
 /**
  * listing details component.
@@ -21,21 +24,65 @@ import SecondaryButton from "@/components/buttons/SecondaryButton";
 
 const ListingDetailsContainer: React.FC = () => {
   const [userIsOwner, setUserIsOwner] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [token, setToken] = useState("");
+  const [deletionProgress, setDeletionProgress] = useState<DeletionProgress>(
+    DeletionProgress.NOT_STARTED
+  );
   const router = useRouter();
   const { listingId } = router.query;
 
+  // get listing details
   const { data, loading, error } = useQuery(GET_LISTING, {
     variables: { listingId },
     skip: !listingId,
   });
-
   const listing = data?.listing;
+
+  // delete listing
+  const [deleteListing] = useMutation(DELETE_LISTING, {
+    variables: {
+      deleteListingId: listingId,
+    },
+    context: {
+      headers: {
+        authorization: token ?? "",
+      },
+    },
+  });
+
+  // show delete modal
+  const showDeleteListingModal = () => {
+    setShowDeleteModal(true);
+  };
+
+  // close delete modal
+  const closeDeleteListingModal = () => {
+    setShowDeleteModal(false);
+
+    // reset deletion progress
+    setDeletionProgress(DeletionProgress.NOT_STARTED);
+  };
+
+  // handle delete listing
+  const handleDeleteListing = () => {
+    setDeletionProgress(DeletionProgress.DELETING);
+    deleteListing({ variables: { listingId } })
+      .then(() => {
+        setDeletionProgress(DeletionProgress.DELETED);
+      })
+      .catch(() => {
+        setDeletionProgress(DeletionProgress.ERROR);
+      });
+  };
 
   // check if logged in user is the owner of the listing
   useEffect(() => {
     const loggedInUser = getLoggedInUser();
-    if (loggedInUser && loggedInUser.id === listing?.user.id) {
-      setUserIsOwner(true);
+    if (loggedInUser) {
+      const { token, id } = loggedInUser;
+      setUserIsOwner(id === listing?.user.id);
+      setToken(token);
     }
   }, [listing?.user.id]);
 
@@ -72,7 +119,10 @@ const ListingDetailsContainer: React.FC = () => {
                   <SecondaryButton onClick={handleEditListing}>
                     Edit Listing
                   </SecondaryButton>
-                  <button className="text-red-500 hover:bg-red-100 border border-red-600 transition-all duration-150 rounded-lg py-3 text-sm">
+                  <button
+                    className="text-red-500 hover:bg-red-100 border border-red-600 transition-all duration-150 rounded-lg py-3 text-sm"
+                    onClick={showDeleteListingModal}
+                  >
                     Delete Listing
                   </button>
                 </div>
@@ -81,7 +131,6 @@ const ListingDetailsContainer: React.FC = () => {
           )}
         </div>
       </div>
-
       <div className="w-full h-full md:col-span-6 space-y-4 flex flex-col items-start justify-start">
         {/* title and location  */}
         {listing?.title && (
@@ -121,7 +170,13 @@ const ListingDetailsContainer: React.FC = () => {
         {/* price  */}
         <ListingPrice price={listing?.price ?? "-"} />
       </div>
-      {/* <div className="w-full md:col-span-4">Put admin buttons here</div> */}
+      {/* Delete listing Modal */}
+      <DeleteListingModal
+        open={showDeleteModal}
+        setOpen={closeDeleteListingModal}
+        handleDeleteListing={handleDeleteListing}
+        deletionProgress={deletionProgress}
+      />
     </div>
   );
 };

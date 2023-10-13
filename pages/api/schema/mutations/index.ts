@@ -11,6 +11,7 @@ import {
 import {
   createListing,
   updateListing,
+  deleteListing,
 } from "../../resolvers/listings/mutations";
 import { Signature } from "../types";
 
@@ -77,6 +78,23 @@ builder.mutationType({
         }
 
         return await updateListing({ ...args }, user);
+      },
+    }),
+
+    // delete listing
+    deleteListing: t.prismaField({
+      type: "Listing",
+      description: "Delete a listing",
+      args: {
+        id: t.arg.string({ required: true }),
+      },
+      resolve: async (query, root, args, ctx, info) => {
+        const { user } = ctx as { user: User };
+        if (!user) {
+          throw new Error("User is not authenticated");
+        }
+
+        return await deleteListing({ ...args }, user);
       },
     }),
 

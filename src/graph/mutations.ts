@@ -138,3 +138,13 @@ export const REQUEST_CLOUDINARY_SIGNATURE = gql`
     }
   }
 `;
+
+// delete listing
+export const DELETE_LISTING = gql`
+  mutation DeleteListing($deleteListingId: String!) {
+    deleteListing(id: $deleteListingId) {
+      title
+      id
+    }
+  }
+`;
