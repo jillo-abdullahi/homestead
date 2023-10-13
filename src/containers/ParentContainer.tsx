@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Banner from "@/components/banner";
 import { getLoggedInUser } from "@/utils/saveLoggedInUser";
+import { useRouter } from "next/router";
 
 /**
  * parent container
@@ -13,6 +14,7 @@ interface ParentContainerProps {
 
 const ParentContainer: React.FC<ParentContainerProps> = ({ children }) => {
   const [userIsConfirmed, setUserIsConfirmed] = useState(true);
+  const router = useRouter();
   // check if logged in user is confirmed
   useEffect(() => {
     const loggedInUser = getLoggedInUser();
@@ -26,10 +28,18 @@ const ParentContainer: React.FC<ParentContainerProps> = ({ children }) => {
     }
   }, []);
 
-  const bannerMessage = "We sent a confirmation link to your email. Please confirm your email.";
+  const bannerMessage =
+    "We sent a confirmation link to your email. Please confirm your email.";
+
+  // we don't want to show the banner on the confirm email page
+  const { pathname } = router;
+  const isConfirmationPage = pathname.includes("confirm-email");
+
   return (
     <div>
-      {!userIsConfirmed && <Banner text={bannerMessage} dismiss={() => setUserIsConfirmed(true)} />}
+      {!userIsConfirmed && !isConfirmationPage && (
+        <Banner text={bannerMessage} dismiss={() => setUserIsConfirmed(true)} />
+      )}
       {children}
     </div>
   );
