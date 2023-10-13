@@ -12,6 +12,7 @@ import InputFieldWithIcon from "@/components/inputFields/InputFieldWithIcon";
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import Banner from "@/components/banner";
+import BrandName from "@/components/brandName";
 
 /**
  * component to confirm user email
@@ -127,11 +128,8 @@ const ConfirmEmailContainer: React.FC = () => {
     <>
       {showSuccessMessage && <Banner text={bannerSuccessText} />}
       <div className="relative flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm text-center">
-          <span className="font-bold text-xl text-gray-800 hover:text-gray-700 transition-all duration-100">
-            Homestead
-            <span className="text-violet-500 font-bold text-3xl">.</span>
-          </span>
+        <div className="flex w-full items-center justify-center">
+          <BrandName />
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-md rounded-lg bg-white p-10">

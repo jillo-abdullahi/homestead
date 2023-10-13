@@ -30,7 +30,7 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
     <button
       type={type}
       className={`rounded-lg bg-violet-700 font-medium text-white shadow-sm hover:bg-violet-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-600 transition-all duration-150
-      border-transparent border-2 w-full
+      border-transparent border-2 w-full h-12
       ${padding} ${fontSize} ${disabled && "opacity-50 cursor-not-allowed"}`}
       onClick={onClick}
       disabled={disabled}

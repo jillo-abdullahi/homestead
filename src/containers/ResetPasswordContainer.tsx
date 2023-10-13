@@ -10,6 +10,7 @@ import isValidPassword from "@/utils/isValidPassword";
 import { RESET_PASSWORD } from "@/graph/mutations";
 import FormUnknownError from "@/components/errorStates/FormUnknownError";
 import Banner from "@/components/banner";
+import BrandName from "@/components/brandName";
 
 /**
  * component to reset user password.
@@ -128,11 +129,8 @@ const ResetPasswordContainer = () => {
     <>
       {resetDetails.success && <Banner text={successText} />}
       <div className="relative flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm text-center">
-          <span className="font-bold text-xl text-gray-800 hover:text-gray-700 transition-all duration-100">
-            Homestead
-            <span className="text-violet-500 font-bold text-3xl">.</span>
-          </span>
+        <div className="flex w-full items-center justify-center">
+          <BrandName />
         </div>
 
         <div

@@ -6,6 +6,7 @@ import PrimaryButton from "@/components/buttons/PrimaryButton";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import Avatar from "@/components/navbar/Avatar";
 import { getLoggedInUser } from "@/utils/saveLoggedInUser";
+import BrandName from "@/components/brandName";
 
 /**
  * Main nav component with links to other pages
@@ -48,15 +49,7 @@ const Navbar: React.FC<NavbarProps> = ({ isOnCreateListingPage = false }) => {
   return (
     <div className="w-full py-6 flex items-center justify-between">
       {/* brand name  */}
-      <Link
-        href="/"
-        className="text-xl text-gray-700 flex items-end justify-start space-x-1"
-      >
-        <span className="font-bold text-xl text-gray-800 hover:text-gray-700 transition-all duration-100">
-          Homestead
-          <span className="text-violet-500 font-bold text-3xl">.</span>
-        </span>
-      </Link>
+      <BrandName />
       {/* links */}
       <div className="ml-auto flex space-x-3 items-center">
         {isLoggedin && (

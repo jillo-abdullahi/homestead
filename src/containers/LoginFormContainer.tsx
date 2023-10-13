@@ -9,6 +9,7 @@ import InputFieldWithIcon from "@/components/inputFields/InputFieldWithIcon";
 import { LOGIN_USER } from "@/graph/mutations";
 import FormUnknownError from "@/components/errorStates/FormUnknownError";
 import { saveLoggedInUser } from "@/utils/saveLoggedInUser";
+import BrandName from "@/components/brandName";
 
 /**
  * Login form component.
@@ -79,11 +80,8 @@ const LoginFormContainer = () => {
 
   return (
     <div className="relative flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm text-center">
-        <span className="font-bold text-xl text-gray-800 hover:text-gray-700 transition-all duration-100">
-          Homestead
-          <span className="text-violet-500 font-bold text-3xl">.</span>
-        </span>
+      <div className="flex w-full items-center justify-center">
+        <BrandName />
       </div>
 
       <div

@@ -7,6 +7,7 @@ import PrimaryButton from "@/components/buttons/PrimaryButton";
 import FormUnknownError from "@/components/errorStates/FormUnknownError";
 import Banner from "@/components/banner";
 import { FORGOT_PASSWORD } from "@/graph/mutations";
+import BrandName from "@/components/brandName";
 
 /**
  * component to handle forgot password
@@ -72,11 +73,8 @@ const ForgotPasswordContainer: React.FC = () => {
       <div
         className={`relative flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8`}
       >
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm text-center">
-          <span className="font-bold text-xl text-gray-800 hover:text-gray-700 transition-all duration-100">
-            Homestead
-            <span className="text-violet-500 font-bold text-3xl">.</span>
-          </span>
+        <div className="flex w-full items-center justify-center">
+          <BrandName />
         </div>
         <div
           className={`mt-10 sm:mx-auto sm:w-full sm:max-w-md rounded-lg bg-white p-10  ${
