@@ -44,7 +44,6 @@ const uploadImagesToCloudinary = async (
   });
 
   const results = await Promise.all(uploadPromises);
-  console.log({ results });
   return results;
 };
 

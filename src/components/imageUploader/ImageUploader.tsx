@@ -38,8 +38,6 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     const files = e.target.files;
 
     if (!files) return;
-
-    console.log({ files });
     setSelectedImages((prevState) => [...prevState, ...files]);
   };
 
@@ -79,7 +77,6 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
         prevImages?.filter((img) => img !== image)
       );
 
-    console.log({ publicId });
   }, []);
 
   return (
