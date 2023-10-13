@@ -75,6 +75,7 @@ export const updateListing = async (
     bathrooms?: number | null | undefined;
     area?: number | null | undefined;
     images: string[] | [];
+    removeImages: string[] | [];
   },
   user: User
 ) => {
@@ -88,6 +89,8 @@ export const updateListing = async (
     bathrooms,
     area,
     images,
+    // public id of images to remove from cloudinary
+    removeImages,
   } = args;
 
   // make sure the user owns the listing
@@ -99,6 +102,10 @@ export const updateListing = async (
     if (!listing) throw new Error("Listing not found");
     if (listing.userId !== user?.id)
       throw new Error("You don't own this listing");
+
+    // remove images no longer tied to listing
+    if (removeImages.length)
+      await cloudinary.api.delete_resources(removeImages, { invalidate: true });
   } catch (error) {
     throw new Error(`Error finding listing: ${error}`);
   }

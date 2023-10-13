@@ -70,6 +70,7 @@ builder.mutationType({
         bathrooms: t.arg.int({ required: false }),
         area: t.arg.int({ required: false }),
         images: t.arg.stringList({ required: true }),
+        removeImages: t.arg.stringList({ required: true }),
       },
       resolve: async (query, root, args, ctx, info) => {
         const { user } = ctx as { user: User };

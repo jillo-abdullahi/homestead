@@ -111,6 +111,7 @@ export const UPDATE_LISTING = gql`
     $bathrooms: Int
     $bedrooms: Int
     $description: String
+    $removeImages: [String!]!
   ) {
     updateListing(
       id: $updateListingId
@@ -122,6 +123,7 @@ export const UPDATE_LISTING = gql`
       bathrooms: $bathrooms
       bedrooms: $bedrooms
       description: $description
+      removeImages: $removeImages
     ) {
       id
       title

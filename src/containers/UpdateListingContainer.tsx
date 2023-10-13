@@ -39,6 +39,7 @@ const UpdateListingContainer: React.FC = () => {
   const [errorText, setErrorText] = useState("");
   const [isUploadingImages, setIsUploadingImages] = useState(false);
   const [token, setToken] = useState("");
+  const [removeImages, setRemoveImages] = useState<string[]>([]);
 
   // image states
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
@@ -71,8 +72,6 @@ const UpdateListingContainer: React.FC = () => {
     variables: { listingId },
     skip: !listingId,
   });
-
-  console.log({ listingDetails });
 
   // set default state if on update listing page
   useEffect(() => {
@@ -172,6 +171,7 @@ const UpdateListingContainer: React.FC = () => {
                 bathrooms: Number(bathrooms) || null,
                 area: Number(area) || null,
                 images,
+                removeImages,
               },
               onCompleted: () => {
                 setProgressStatus(ProgressStatus.Completed);
@@ -230,6 +230,7 @@ const UpdateListingContainer: React.FC = () => {
           selectedImages={selectedImages}
           setSelectedImages={setSelectedImages}
           setListingImages={setListingImages}
+          setRemoveImages={setRemoveImages}
         />
       </div>
       {/* creation progress modal  */}

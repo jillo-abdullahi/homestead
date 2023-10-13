@@ -9,6 +9,7 @@ import SelectedImage from "@/components/imageUploader/SelectedImage";
  * @param {React.Dispatch<React.SetStateAction<boolean>>} setIsFileSizeError - function to set isFileSizeError
  * @param {string[]} listingImages - array of listing images if on update listing page
  * @param {React.Dispatch<React.SetStateAction<string[]>>} setListingImages - function to set listing images
+ * @param {React.Dispatch<React.SetStateAction<string[]>>} setRemoveImages - function to set images to remove
  * @returns
  */
 
@@ -19,6 +20,7 @@ interface ImageUploaderProps {
   setIsFileSizeError: React.Dispatch<React.SetStateAction<boolean>>;
   listingImages?: string[];
   setListingImages?: React.Dispatch<React.SetStateAction<string[]>>;
+  setRemoveImages?: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const ImageUploader: React.FC<ImageUploaderProps> = ({
@@ -28,6 +30,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   setIsFileSizeError,
   listingImages,
   setListingImages,
+  setRemoveImages,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   // handle file upload
@@ -64,7 +67,13 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     const imageUrl = new URL(image);
     const publicId = imageUrl.searchParams.get("pid");
 
+    // add image to remove images
+    // this is to remove the image from cloudinary
+    setRemoveImages &&
+      setRemoveImages((prevImages) => [...prevImages, publicId!]);
+
     // remove image from listing images
+    // updates listing images state to show only images that are not removed
     setListingImages &&
       setListingImages((prevImages) =>
         prevImages?.filter((img) => img !== image)

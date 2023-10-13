@@ -34,6 +34,7 @@ interface CreateUpdateListingFormProps {
   selectedImages: File[];
   setSelectedImages: React.Dispatch<React.SetStateAction<File[]>>;
   setListingImages?: React.Dispatch<React.SetStateAction<string[]>>;
+  setRemoveImages?: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const CreateUpdateListingForm: React.FC<CreateUpdateListingFormProps> = ({
@@ -44,6 +45,7 @@ const CreateUpdateListingForm: React.FC<CreateUpdateListingFormProps> = ({
   selectedImages,
   setSelectedImages,
   setListingImages,
+  setRemoveImages,
 }) => {
   const [isFileSizeError, setIsFileSizeError] = useState(false);
   const router = useRouter();
@@ -61,6 +63,7 @@ const CreateUpdateListingForm: React.FC<CreateUpdateListingFormProps> = ({
             listingImages={listingImages}
             setListingImages={setListingImages}
             setIsFileSizeError={setIsFileSizeError}
+            setRemoveImages={setRemoveImages}
           />
         </div>
 
