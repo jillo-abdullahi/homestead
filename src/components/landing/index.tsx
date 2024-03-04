@@ -29,7 +29,7 @@ const Landing: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-start">
       <div
-        className="w-full flex justifif-start items-center rounded-xl p-10 bg-violet-100 h-[30rem]"
+        className="w-full flex justify-start items-center rounded-xl p-10 bg-violet-100 h-[30rem]"
         style={{
           background: "url('/bg-intro.jpeg') no-repeat center center",
           backgroundSize: "cover",

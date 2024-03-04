@@ -51,7 +51,7 @@ const Avatar: React.FC<AvatarProps> = ({ userEmail, username }) => {
                 <div className="text-violet-700">
                   <UserCircleIcon className="h-8 w-8 mr-1" aria-hidden="true" />
                 </div>
-                <div className="ml-2 text-left">
+                <div className="ml-2 text-left pr-2 truncate">
                   <p className="text-sm font-medium text-gray-700">
                     {username}
                   </p>
